@@ -1,0 +1,13 @@
+---
+source_files: [../src/fileselecticons.S, ../src/fileselecticons.cpp]
+hooks:
+  - name: FSLoadIcons
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8077da30
+    target_func: 'FSLoadIcons'
+  
+  - name: CSMStorePlayerIntoSave
+    type: add_func_pointer
+    src_addr_pal: 0x809415f8
+    target_func: 'CSMStorePlayer(dBase_c *)'
