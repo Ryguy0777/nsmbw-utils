@@ -2,6 +2,8 @@ ABOUT:
 This code is intended to work with mkwcat's P1 Character Change patch.
 It causes the file select to display the icon and lives of the last character used for Player 1 instead of Mario.
 
+Version 1.0
+
 INSTALLATION:
 Game Files:
     add dateFile.arc to your Others folder 
