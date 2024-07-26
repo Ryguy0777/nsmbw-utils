@@ -1,0 +1,8 @@
+---
+source_files: [../src/utils.cpp]
+hooks:
+  - name: UpdateLevelList
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800b4f90
+    target_func: 'newGetCourseNum(int, int)'

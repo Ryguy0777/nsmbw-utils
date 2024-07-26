@@ -1,0 +1,9 @@
+---
+source_files: [../src/pausemenu.cpp]
+hooks:
+  - name: doPauseMenuLI
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8015AC60
+    target_func: 'Pausewindow_c::newLoadLevelName(void)'
+

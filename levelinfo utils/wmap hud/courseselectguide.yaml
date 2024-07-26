@@ -1,0 +1,8 @@
+---
+source_files: [../src/courseselectguide.cpp]
+hooks:
+  - name: ReadLevelNumberFromLevelInfo
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80010b50
+    target_func: 'dCourseSelectGuide_c::NewUpdateLevelDisplay(unsigned int)'
