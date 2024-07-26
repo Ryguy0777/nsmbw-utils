@@ -1,0 +1,8 @@
+---
+source_files: [../src/crsin.cpp]
+hooks:
+  - name: PregameLINumbers
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80B6BDD0
+    target_func: 'PregameLytHandler::newLoadLevelNumber(void)'
