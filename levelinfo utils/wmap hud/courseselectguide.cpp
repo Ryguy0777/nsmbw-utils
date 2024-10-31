@@ -8,8 +8,10 @@ class dCourseSelectGuide_c {
         u32 unk;
         m2d::EmbedLayout_c layout;
 
-        u8 _1A0[0x3c], _1DC[0x3c], _218[0x3c], _254[0x3c],
-        _290[0x3c], _2CC[0x3c], _308[0x3c], _344[0x3c]; //SMWrappers, too lazy to figure out
+        // state machines
+		dStateWrapper_c<dCourseSelectGuide_c> state_courseInfo, state_guide, state_mapViewScrollUp,
+		state_mapViewScrollDown, state_mapViewScrollLeft, state_MapViewScrollRight, state_shadow,
+		state_mapView;
 
         nw4r::lyt::Pane
             *rootPane, *N_IconPos1P_00, *N_IconPos2P_00, *N_IconPos3P_00,
@@ -26,13 +28,17 @@ class dCourseSelectGuide_c {
             *P_cC_2s_00, *P_cC_3s_00, *P_flagSkull_00, *P_marioFace_00,
             *P_luigiFace_00, *P_BkinoFace_00, *P_YkinoFace_00, *P_bgShadow_00;
 
-        u32 lastControllerTypeUsed, currentWorldNum, currentLevelNum, _410, currentLivesValue;
-        u8 _418[0xC];
-        u32 timer_WorldCourseOnStageWait, timer_GuideOnStageWait, currentLivesAlpha, isLivesFadedIn;
-        u8 _434, layoutLoaded, _436[0xB], isVisible;
-        bool inhibitHUDShowAndHide;
-        u8 _443, _444, isMapCurrentlyBeingViewed, _446[8], livesUpdated;
+        u32 lastControllerTypeUsed, currentWorldNum, currentLevelNum, currentLevelGroup,
+		currentLivesValue[4], timer_WorldCourseOnStageWait, timer_GuideOnStageWait,
+		currentLivesAlpha, isLivesFadedIn;
 
+        u8 keyPressValue;
+		bool layoutLoaded, shouldHideLives, shouldHideCourseInfo, hidingCourseInfo, setCourseInfoToLastFrame,
+		hidingGuide, shouldHideGuide, _43C, setLivesAndGuideToLastFrame, keyWasPressed, exitingMapView, _440,
+		isVisible, inhibitHUDShowAndHide, showShadow, hideShadow, isMapViewExitVisible, enterMapView,
+		exitMapView, enteringMapView, animationActive, upArrowAnimActive, downArrowAnimActive,
+		leftArrowAnimActive, rightArrowAnimActive, livesUpdated;
+		
         //our new func
         void NewUpdateLevelDisplay(u32 param);
 };
