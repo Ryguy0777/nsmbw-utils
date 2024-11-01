@@ -1,0 +1,8 @@
+---
+source_files: [../src/worldselectguide.cpp]
+hooks:
+  - name: ReadWorldNumberFromLevelInfo
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8092B7B0
+    target_func: 'dWorldSelectGuide_c::newUpdateWorldNum(void)'
