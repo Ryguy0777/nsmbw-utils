@@ -1,0 +1,10 @@
+	/* General Symbols */
+	dEn_c_EnBgCheck = 0x80096e60;
+	GetDanceValues_DummyBlockAndGrass = 0x8006A1C0;
+	CheckDanceValues_DummyBlockAndGrass = 0x8006A1D0;
+	GetDanceValues_Bahps = 0x8006A1F0;
+    	CheckDanceValues_Bahps = 0x8006A200;
+	GetDanceValues_CreditsControl = 0x8006A220;
+	GetDanceValues_AnimSpeed = 0x8006A230;
+	SetCurrentStageMusic = 0x8006A240;
+	GetCurrentStageMusic = 0x8006A250;

@@ -100,4 +100,3 @@
 	StateID_TrplnJump__16daEnKuriboBase_c = 0x8035386c;
 	StateID_Turn__16daEnKuriboBase_c = 0x8035382c;
 	StateID_Walk__16daEnKuriboBase_c = 0x803537ec;
-	dEn_c_EnBgCheck = 0x80096e60;

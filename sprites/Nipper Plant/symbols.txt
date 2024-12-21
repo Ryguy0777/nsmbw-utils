@@ -1,6 +1,5 @@
 	/* Nipper Plant */
 	changePosAngle = 0x80064af0;
 	Stage_exeFrame = 0x8042a4e0;
-	dEn_c_EnBgCheck = 0x80096e60;
 	getConnectChild = 0x801626f0;
 	getConnectBrNext = 0x80162710;
