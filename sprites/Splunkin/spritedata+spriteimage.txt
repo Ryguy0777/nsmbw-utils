@@ -1,0 +1,34 @@
+  <sprite id="XXX" name="Splunkin" notes="A walking pumpkin.">
+	<list nybble="6" title="Spawn Direction" requirednybble="12" requiredval="4">
+	  <entry value="0">Left</entry>
+      <entry value="1">Right</entry>
+	</list>
+	<list nybble="6" title="Spawn Direction and Height" comment="The Splunkin will jump in the opposite direction they are facing." requirednybble="12" requiredval="5">
+	  <entry value="0">Left, Low</entry>
+      <entry value="1">Right, Low</entry>
+	  <entry value="2">Left, High</entry>
+      <entry value="3">Right, High</entry>
+	</list>
+    <checkbox nybble="8.4" title="Place Behind Other Sprites" comment="When enabled, this changes the relative Z-Order of the Splunkin placing it further behind other sprites."/>
+	<list nybble="12" title="Load-In Animation" comment="This value affects the spawning animation of the Splunkin. This is useful for Splunkins within range of a nearby Entrance. Jumps and Tumble will result in it landing on the platform below where it was initially placed.">
+      <entry value="0">Normal</entry>
+      <entry value="1">Tumble</entry>
+      <entry value="2">Small Jump</entry>
+      <entry value="3">Hesitates</entry>
+      <entry value="4">Medium Jump</entry>
+      <entry value="5">Large Jump</entry>
+    </list>
+  </sprite> <!-- #XXX: Splunkin -->
+
+class SpriteImage_Splunkin(SLib.SpriteImage_Static):
+    def __init__(self, parent):
+        super().__init__(
+            parent,
+            1.5,
+            ImageCache['Splunkin'],
+            (-3, -4)
+        )
+
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('Splunkin', 'splunkin.png')

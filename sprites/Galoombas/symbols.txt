@@ -1,0 +1,14 @@
+	/* Galoomba, Para Galoomba, & Goombud*/
+	getAnkleCenterPos = 0x800582f0;
+	itemPickedUp__13dStageActor_cFP13dStageActor_c = 0x80065820;
+	startEnemySound = 0x80198040;
+	cvtSndObjctPos = 0x8006a4b0;
+	EnBgCheckWall = 0x80097050;
+	EnBgCheckFoot = 0x80096f60;
+	calcCarryPos = 0x80097a20;
+	cancelCarry = 0x8012e650;
+	updateWhenCarried = 0x800963b0;
+	SetPosForCarry = 0x80075fd0;
+	setRide = 0x800d99e0;
+	setPlayerCarry = 0x80096330;
+	getRemotePlayer = 0x80069530;

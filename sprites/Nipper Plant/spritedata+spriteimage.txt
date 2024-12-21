@@ -1,0 +1,32 @@
+  <sprite id="XXX" name="Nipper Plant" notes="A small plant resembling a muncher with a white head that will jump to reach players above.">
+    <dualbox nybble="8.3" title1="Stationary" title2="Patrols area" comment="This determines if the Nipper Plant will stay in place or move around." comment2="The plant will still jump to the player no matter the movement type."/>
+	<list nybble="9" title="Jump Height" comment="The Nipper Plant will always have the same detection radius (6 tiles).">
+	  <entry value="0">High Jump (5 tiles)</entry>
+      <entry value="1">Medium Jump (3 tiles)</entry>
+	  <entry value="2">Low Jump (2 tiles)</entry>
+	</list>
+	<checkbox nybble="12.4" title="Frozen" comment="When enabled, the Nipper Plant will be frozen. It can be thawed with a fireball. When frozen there is no visual difference between walking and stationary Nipper Plants."/>
+  </sprite> <!-- #XXX: Nipper Plant -->
+
+class SpriteImage_NipperPlant(SLib.SpriteImage_StaticMultiple):
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('Nipper', 'nipper.png')
+        SLib.loadIfNotInImageCache('NipperF', 'nipper_frozen.png')
+        SLib.loadIfNotInImageCache('NipperW', 'nipper_walk.png')
+
+    def dataChanged(self):
+
+        frozen = self.parent.spritedata[5] & 1
+        walk = self.parent.spritedata[3] >> 1 & 1
+        if frozen == 1:
+            self.image = ImageCache['NipperF']
+            self.offset = (0, 0)
+        elif walk == 1:
+            self.image = ImageCache['NipperW']
+            self.offset = (0, -1)
+        else:
+            self.image = ImageCache['Nipper']
+            self.offset = (0, -1)
+
+        super().dataChanged()

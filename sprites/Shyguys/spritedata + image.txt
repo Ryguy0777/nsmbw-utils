@@ -1,0 +1,119 @@
+  <sprite id="XXX" name="Shy Guy" notes="A walking Shy Guy. Can be set to turn at ledges, pace a specified distance, sleep, or bounce up and down.">
+    <list nybble="5" title="Type" notes="Types greater than 4 spawn Shy Guys that won't move.">
+      <entry value="0">Walker (Walks Off Ledges)</entry>
+      <entry value="1">Walker (Turns Around At Ledges)</entry>
+      <entry value="2">Sleeper</entry>
+      <entry value="3">Jumper</entry>
+      <entry value="4">Pacer</entry>
+    </list>
+	<list nybble="6" title="Color">
+	  <entry value="0">Red</entry>
+	  <entry value="1">Pink</entry>
+	  <entry value="2">Yellow</entry>
+	  <entry value="3">Blue</entry>
+	  <entry value="4">Green</entry>
+	  <entry value="5">Black</entry>
+	  <entry value="6">White</entry>
+	  <entry value="7">Light Blue</entry>
+	  <entry value="8">Orange</entry>
+	  <entry value="9">Purple</entry>
+	</list>
+	<checkbox nybble="8.3" title="Dies in 2 Stomps" comment="When enabled, this causes the Shy Guy to die in 2 stomps instead of 1."/>
+	<checkbox nybble="8.4" title="Place Behind Other Sprites" comment="When enabled, this changes the relative Z-order of the Shy Guy placing it further behind other sprites."/>
+    <value nybble="9" title="Distance" comment="The distance the Shy Guy will walk in each direction. The Shy Guy will ignore ledges." requirednybble="5" requiredval="4"/>
+	<dualbox nybble="10.4" title1="Spawns Left" title2="Spawns Right" requirednybble="5" requiredval="3-4"/>
+  </sprite> <!-- #XXX: Shy Guy -->
+  
+  <sprite id="XXX" name="Bubble Shy Guy" notes="A walking Shy Guy in a floating bubble. Will start walking when popped">
+    <list nybble="5" title="Type" notes="Types greater than 4 spawn Shy Guys that won't move.">
+      <entry value="0">Walker (Walks Off Ledges)</entry>
+      <entry value="1">Walker (Turns Around At Ledges)</entry>
+      <entry value="2">Sleeper</entry>
+      <entry value="3">Jumper</entry>
+      <entry value="4">Pacer</entry>
+    </list>
+	<list nybble="6" title="Color">
+	  <entry value="0">Red</entry>
+	  <entry value="1">Pink</entry>
+	  <entry value="2">Yellow</entry>
+	  <entry value="3">Blue</entry>
+	  <entry value="4">Green</entry>
+	  <entry value="5">Black</entry>
+	  <entry value="6">White</entry>
+	  <entry value="7">Light Blue</entry>
+	  <entry value="8">Orange</entry>
+	  <entry value="9">Purple</entry>
+	</list>
+	<checkbox nybble="7.1" title="Pops when Above Player" comment="The Shy Guy's bubble will pop when above the player when this is enabled."/>
+	<list nybble="7.2-7.3" title="Bubble Movement">
+	  <entry value="0">No Movement</entry>
+	  <entry value="1">Horizontal Movement</entry>
+	  <entry value="2">Vertical Movement</entry>
+	  <entry value="3">Circular Movement</entry>
+	</list>
+	<value nybble="11" title="Bubble Distance" comment="The distance the bubble will travel in each direction."/>
+	<checkbox nybble="8.3" title="Dies in 2 Stomps" comment="When enabled, this causes the Shy Guy to die in 2 stomps instead of 1."/>
+	<checkbox nybble="8.4" title="Place Behind Other Sprites" comment="When enabled, this changes the relative Z-order of the Shy Guy placing it further behind other sprites."/>
+    <value nybble="9" title="Distance" comment="The distance the Shy Guy will walk in each direction. The Shy Guy will ignore ledges." requirednybble="5" requiredval="4"/>
+	<dualbox nybble="10.4" title1="Spawns Left" title2="Spawns Right" requirednybble="5" requiredval="3-4"/>
+  </sprite> <!-- #XXX: Bubble Shy Guy -->
+
+class SpriteImage_Shyguy(SLib.SpriteImage_StaticMultiple):
+    def __init__(self, parent):
+        super().__init__(
+            parent,
+            1.5,
+            ImageCache['Shyguy'],
+            (-2.5, -7.5),
+        )
+        self.aux.append(SLib.AuxiliaryTrackObject(parent, 0, 0, SLib.AuxiliaryTrackObject.Horizontal))
+
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('Shyguy', 'shyguy.png')
+        SLib.loadIfNotInImageCache('ShyguySleep', 'shyguy_sleeper.png')
+        SLib.loadIfNotInImageCache('ShyguyJump', 'shyguy_jumper.png')
+        
+    def dataChanged(self):
+        
+        type = self.parent.spritedata[2] >> 4 & 0xF
+        distance = (self.parent.spritedata[4] >> 4 & 0xF) * 32
+        if type == 2:
+            self.image = ImageCache['ShyguySleep']
+            self.offset = (-2.5, -5)
+        elif type == 3:
+            self.image = ImageCache['ShyguyJump']
+            self.offset = (-1, -7)
+        else:
+            self.image = ImageCache['Shyguy']
+            self.offset = (-2.5, -7.5)
+        
+        if type == 4:
+            self.aux[0].setSize(distance, 8)
+            self.aux[0].setPos((-distance // 2 - self.offset[0] + 8) * 1.5, 16)
+        else:
+            self.aux[0].setSize(0, 0)
+
+class SpriteImage_ShyguyBubble(SLib.SpriteImage_StaticMultiple):
+    def __init__(self, parent):
+        super().__init__(
+            parent,
+            1.5,
+            ImageCache['ShyguyBubble'],
+            (-10.75, -13),
+        )
+
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('ShyguyBubble', 'shyguy_bubble_idle.png')
+        SLib.loadIfNotInImageCache('ShyguyBubble2', 'shyguy_bubble_moving.png')
+        
+    def dataChanged(self):
+        
+        moving = self.parent.spritedata[3] >> 4 & 0xF
+        if moving > 0:
+            self.image = ImageCache['ShyguyBubble2']
+            self.offset = (-10.75, -13)
+        else:
+            self.image = ImageCache['ShyguyBubble']
+            self.offset = (-10.75, -13)

@@ -1,0 +1,2 @@
+	/* Shyguy, Bubble Shyguy, & Fence Shyguy*/
+	CallXCompareFuncLT = 0x80064a30;

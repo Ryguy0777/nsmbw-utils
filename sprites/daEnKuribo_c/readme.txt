@@ -1,0 +1,1 @@
+this allows for sprites to "inherit" from goombas, using their behavior
