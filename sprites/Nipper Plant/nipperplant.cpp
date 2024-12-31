@@ -1,9 +1,31 @@
 #include <game.h>
 #include <profile.h>
 #include <daFreezer_c.h>
+#include <sfx.h>
 
 class daEnPuchiPakkun_c : public dEn_c {
     public:
+        mHeapAllocator_c allocator;
+
+		nw4r::g3d::ResFile resFile;
+		m3d::mdl_c model;
+		m3d::anmChr_c anmChr;
+
+        u16 nipperAngles[2];
+        u16 nipperTurnAngles[2];
+        
+        bool walks;
+        bool spitsFire;
+        int jumpHeight;
+
+        float storedPosForIce;
+        bool isBahJump;
+        u8 fireDirection;
+        u8 fireDist;
+        int fireTimer;
+        int spatFireCount;
+        int fireCooldown;
+
         int onCreate();
         int onExecute();
         int onDraw();
@@ -18,32 +40,17 @@ class daEnPuchiPakkun_c : public dEn_c {
 
         bool CreateIceActors();
 
-        mHeapAllocator_c allocator;
-
-		nw4r::g3d::ResFile resFile;
-		m3d::mdl_c model;
-		m3d::anmChr_c anmChr;
-
-        u16 nipperAngles[2];
-        u16 nipperTurnAngles[2];
-        
-        bool walks;
-        int jumpHeight;
-
-        float storedPosForIce;
-        bool isBahJump;
-
-        lineSensor_s adjacent;
-
         void loadModel();
         void updateModel();
 
-        void playChrAnim(const char* name, int playsOnce, float unk2, float rate, bool syncedAnim);
+        void playChrAnim(const char* name, int playsOnce, float unk2, float rate, bool synced);
 
         void setWalkSpeed();
 
         bool checkForLedge(float xOffset);
         bool isPlayerAbove();
+        bool isPlayerInFireRange();
+        void setFireDistance(float distance);
 
         static dActor_c *build();
 
@@ -52,12 +59,14 @@ class daEnPuchiPakkun_c : public dEn_c {
         DECLARE_STATE(Walk);
         DECLARE_STATE(Turn);
         DECLARE_STATE(Jump);
+        DECLARE_STATE(FireSpit);
         DECLARE_STATE(IceWait);
 };
 CREATE_STATE(daEnPuchiPakkun_c, Idle);
 CREATE_STATE(daEnPuchiPakkun_c, Walk);
 CREATE_STATE(daEnPuchiPakkun_c, Turn);
 CREATE_STATE(daEnPuchiPakkun_c, Jump);
+CREATE_STATE(daEnPuchiPakkun_c, FireSpit);
 CREATE_STATE(daEnPuchiPakkun_c, IceWait);
 
 dActor_c *daEnPuchiPakkun_c::build() {
@@ -84,6 +93,7 @@ int daEnPuchiPakkun_c::onCreate() {
     //sprite settings
     walks = (settings >> 17) & 1;
     jumpHeight = (settings >> 12) & 0xF;
+    spitsFire = (settings >> 1) & 1;
 
     loadModel();
 
@@ -116,15 +126,9 @@ int daEnPuchiPakkun_c::onCreate() {
     scale.y = 1.0;
     scale.z = 1.0;
 
-    //tile collider
-    int tileWidth = 8;
-    if (walks) {
-        //walking nippers have a wider tile collider, so they turn before hitting a wall
-        tileWidth = 16;
-    }
 	static const lineSensor_s below(-4<<12, 4<<12, 0<<12);
 	static const pointSensor_s above(0<<12, 16<<12);
-    adjacent = lineSensor_s(3<<12, 8<<12, tileWidth<<12);
+    static const lineSensor_s adjacent(3<<12, 8<<12, 8<<12);
 
 	collMgr.init(this, &below, &above, &adjacent);
 
@@ -139,7 +143,11 @@ int daEnPuchiPakkun_c::onCreate() {
 	_320 = 0.0;
 	_324 = 8.0;
 
-    _36D = 2;
+    if (spitsFire) {
+        _36D = 4;
+    } else {
+        _36D = 2;
+    }
 
     if (settings & 1) { //spawn frozen
         doStateChange(&StateID_IceWait);
@@ -271,17 +279,17 @@ void daEnPuchiPakkun_c::updateModel() {
 
 extern u32 Stage_exeFrame;
 
-void daEnPuchiPakkun_c::playChrAnim(const char* name, int playsOnce, float unk, float rate, bool syncedAnim) {
+void daEnPuchiPakkun_c::playChrAnim(const char* name, int playsOnce, float unk, float rate, bool synced) {
 	nw4r::g3d::ResAnmChr resAnmChr = resFile.GetResAnmChr(name);
 	anmChr.bind(&model, resAnmChr, playsOnce);
 	model.bindAnim(&anmChr, unk);
 	anmChr.setUpdateRate(rate);
 
-    //sync our animations with other nippers
-    if (syncedAnim) {
-		float frame = Stage_exeFrame - (Stage_exeFrame / int(anmChr._28)) * int(anmChr._28);
-		anmChr.setCurrentFrame(frame);
-	}
+    if (synced) {
+        //sync our animations with other nippers
+        float frame = Stage_exeFrame - (Stage_exeFrame / int(anmChr._28)) * int(anmChr._28);
+        anmChr.setCurrentFrame(frame);
+    }
 }
 
 void daEnPuchiPakkun_c::setWalkSpeed() {
@@ -322,7 +330,7 @@ bool daEnPuchiPakkun_c::isPlayerAbove() {
             //make sure they're not bubbled
             if (strcmp(player->states2.getCurrentState()->getName(), "dAcPy_c::StateID_Balloon")) {
                 //are we in the same x range as the nipper?
-                if (16.0 >= abs(player->pos.x - pos.x)) {
+                if (10.0 >= abs(player->pos.x - pos.x)) {
                     //are we in the y range?
                     if (pos.y + 8.0 <= player->pos.y && player->pos.y <= pos.y + 104.0) {
                         return true;
@@ -332,6 +340,35 @@ bool daEnPuchiPakkun_c::isPlayerAbove() {
         }
     }
     return false;
+}
+
+extern "C" bool CallXCompareFuncLT(float, float);
+bool daEnPuchiPakkun_c::isPlayerInFireRange() {
+    for (int i = 0; i < 4; i++) {
+        dAcPy_c *player = dAcPy_c::findByID(i);
+        if (player) {
+            if (strcmp(player->states2.getCurrentState()->getName(), "dAcPy_c::StateID_Balloon")) {
+                if ((88.0 >= abs(player->pos.x - pos.x)) && (48.0 >= abs(player->pos.y - pos.y))) {
+                    fireDirection = CallXCompareFuncLT(player->pos.x + player->pos_delta2.x, pos.x + pos_delta2.x);
+                    setFireDistance(abs(player->pos.x - pos.x));
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void daEnPuchiPakkun_c::setFireDistance(float distance) {
+    if (distance >= 65.0) {
+        fireDist = 3;
+    } else if (distance >= 49.0) {
+        fireDist = 2;
+    } else if (distance >= 30) {
+        fireDist = 1;
+    } else {
+        fireDist = 0;
+    }
 }
 
 extern "C" u8 dEn_c_EnBgCheck(dEn_c *self);
@@ -362,6 +399,12 @@ void daEnPuchiPakkun_c::executeState_Idle() {
         if (isPlayerAbove()) {
             doStateChange(&StateID_Jump);
         }
+        if (spitsFire && isPlayerInFireRange() && fireCooldown == 0) {
+            doStateChange(&StateID_FireSpit);
+        }
+    }
+    if (fireCooldown > 0) {
+        fireCooldown--;
     }
 
     DoStuffAndMarkDead(this, pos, 1.0);
@@ -371,7 +414,7 @@ void daEnPuchiPakkun_c::endState_Idle() { }
 
 void daEnPuchiPakkun_c::beginState_Walk() {
     if (acState.getPreviousState() != &StateID_Turn) {
-        playChrAnim("walk", 0, 0.0, 1.0, true);
+        playChrAnim("jump", 0, 0.0, 1.0, true);
     }
     setWalkSpeed();
     //set Y speed for gravity
@@ -392,22 +435,19 @@ void daEnPuchiPakkun_c::executeState_Walk() {
             velocity2.x = velocity2.x + _310;
         }
     } else {
-        velocity2.x = 0.0;
-        speed.y = 0.0;
-        if (!(checkForLedge(2.5f))) {
+        if (collMgr.outputMaybe & 0x15 << direction & 0x3f) {
             doStateChange(&StateID_Turn);
-            return;
-        }
-        if (CheckDanceValues_Bahps(1)) {
-            isBahJump = true;
-            doStateChange(&StateID_Jump);
-        }
-        if (isPlayerAbove()) {
-            doStateChange(&StateID_Jump);
+        } else {
+            velocity2.x = 0.0;
+            speed.y = 1.2;
         }
     }
-    if (collMgr.outputMaybe & 0x15 << direction & 0x3f) {
-        doStateChange(&StateID_Turn);
+    if (isPlayerAbove()) {
+        doStateChange(&StateID_Jump);
+    }
+    if (CheckDanceValues_Bahps(1)) {
+        isBahJump = true;
+        doStateChange(&StateID_Jump);
     }
     DoStuffAndMarkDead(this, pos, 1.0);
 }
@@ -416,9 +456,9 @@ void daEnPuchiPakkun_c::endState_Walk() { }
 
 void daEnPuchiPakkun_c::beginState_Turn() {
     if (acState.getPreviousState() != &StateID_Walk) {
-        playChrAnim("walk", 0, 0.0, 1.0, false);
+        playChrAnim("jump", 0, 0.0, 1.0, true);
     } else {
-        direction = direction^1;
+        direction ^= 1;
     }
     speed.x = 0.0;
 }
@@ -434,16 +474,17 @@ void daEnPuchiPakkun_c::executeState_Turn() {
         }
     } else {
         speed.y = 0.0;
-        if (CheckDanceValues_Bahps(1)) {
-            isBahJump = true;
-            doStateChange(&StateID_Jump);
-        }
+    }
+
+    if (CheckDanceValues_Bahps(1)) {
+        isBahJump = true;
+        doStateChange(&StateID_Jump);
     }
 
     DoStuffAndMarkDead(this, pos, 1.0);
 
     //we use turnangles so the nipper turns the right direction
-    bool doneTurning = SmoothRotation(&rot.y, nipperTurnAngles[direction], 0x500);
+    bool doneTurning = SmoothRotation(&rot.y, nipperTurnAngles[direction], 0x800);
 
     if (doneTurning) {
         doStateChange(&StateID_Walk);
@@ -486,6 +527,9 @@ void daEnPuchiPakkun_c::executeState_Jump() {
     doSpriteMovement();
 
     if ((dEn_c_EnBgCheck(this)) & 1) {
+        if (!isBahJump) {
+            SpawnEffect("Wm_en_landsmoke_s", 0, &pos, (S16Vec *)0, (Vec *)0);
+        }
         if (walks) {
             doStateChange(&StateID_Walk);
         } else {
@@ -518,7 +562,6 @@ void daEnPuchiPakkun_c::executeState_IceWait() {
             fireballState = (freezer->touchedByFire != 0) + 1;
         }
     }
-
     //we're MELTING
     if (fireballState == 2) {
         scale = (Vec3){1.0, 1.0, 1.0};
@@ -536,3 +579,33 @@ void daEnPuchiPakkun_c::executeState_IceWait() {
 }
 
 void daEnPuchiPakkun_c::endState_IceWait() { }
+
+void daEnPuchiPakkun_c::beginState_FireSpit() {
+    playChrAnim("spit", 0, 0.0, 1.0, false);
+    fireTimer = 15;
+}
+
+void daEnPuchiPakkun_c::executeState_FireSpit() {
+    updateModel();
+    HandleYSpeed();
+    doSpriteMovement();
+    dEn_c_EnBgCheck(this);
+
+    if (fireTimer == 15 && isPlayerInFireRange()) {
+        create(AC_PAKKUN_PUCHI_FIRE, fireDist << 4 | fireDirection, &(Vec){pos.x, pos.y + 10.0, pos.z}, &rot, currentLayerID);
+        nw4r::snd::SoundHandle handle;
+        PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_EMY_FIRE_BROS_FIRE, 0);
+        spatFireCount++;
+        fireTimer = 0;
+    }
+    if (spatFireCount > 3 || !isPlayerInFireRange()) {
+        doStateChange(&StateID_Idle);
+    }
+    fireTimer++;
+}
+
+void daEnPuchiPakkun_c::endState_FireSpit() {
+    fireTimer = 0;
+    spatFireCount = 0;
+    fireCooldown = 45;
+}

@@ -1,0 +1,1 @@
+these are basic utilities + symbols for custom sprites, install before using any of these sprites!

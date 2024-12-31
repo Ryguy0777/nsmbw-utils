@@ -1,2 +1,10 @@
 	/* Shyguy, Bubble Shyguy, & Fence Shyguy*/
 	CallXCompareFuncLT = 0x80064a30;
+	MtxToVec = 0x8016f270;
+	checkForKoopas = 0x80aca5bc;
+	addActorToFence = 0x80aca5cc;
+	checkForKoopas2 = 0x80868714;
+	addActorToFence2 = 0x80868724;
+	getNearestPlayerYDirection = 0x800962a0;
+	continueWithNetExecute = 0x80044998;
+	dontFlip = 0x80044a60;

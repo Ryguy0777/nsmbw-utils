@@ -9,6 +9,8 @@ class daEnKabochan_c : public daEnKuribo_c {
         nw4r::g3d::ResAnmClr resClr;
         m3d::anmClr_c anmClr;
 
+        mEf::es2 breakEffect;
+
         int onCreate();
 
         bool collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther);
@@ -54,15 +56,11 @@ int daEnKabochan_c::onCreate() {
 bool daEnKabochan_c::collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther) {
     if (keepMovingUpwards == false) {
         PlaySound(this, SE_EMY_DOWN);
-		SpawnEffect("Wm_mr_softhit", 0, &pos, &(S16Vec){0,0,0}, &(Vec){1.0, 1.0, 1.0});
+		SpawnEffect("Wm_mr_softhit", 0, &pos, (S16Vec *)0, (Vec*)0);
 		addScoreWhenHit(apOther->owner);
 
-        u32 idForGreen = MakeRandomNumber(5);
-        for (int i = 0; i < 5; i++) {
-            bool isGreen = false;
-            if (i == idForGreen) {isGreen = true;}
-            dStageActor_c::create(ProfileId::AC_KABOEFF, (isGreen << 5) | (1 << 4) | i, &(Vec){pos.x, pos.y+16.0, pos.z}, &rot, 0);
-        }
+
+        breakEffect.spawn("Wm_en_splunkinbreak", 0, &pos, (S16Vec *)0, &(Vec){1.5, 1.5, 1.5});
         
         Vec2 killSpeed;
         killSpeed.y = speed.y;
@@ -98,19 +96,15 @@ void daEnKabochan_c::_vf260(void *other) {
 }
 
 void daEnKabochan_c::reactFumiProc(dStageActor_c* killingActor) {
-    u32 idForGreen = MakeRandomNumber(5);
-    for (int i = 0; i < 5; i++) {
-        bool isGreen = false;
-        if (i == idForGreen) {isGreen = true;}
-        dStageActor_c::create(ProfileId::AC_KABOEFF, (isGreen << 5) | (isCracked << 4) | i, &(Vec){pos.x, pos.y+16.0, pos.z}, &rot, 0);
-    }
     if (!isCracked) {
+        breakEffect.spawn("Wm_en_splunkinbreak", 0, &(Vec){pos.x, pos.y+8.0, pos.z}, (S16Vec *)0, (Vec*)0);
         isCracked = true;
         anmChr.setUpdateRate(3.0f);
         anmClr.setFrameForEntry(1.0, 0);
         setWalkSpeed();
         _vf224();
     } else {
+        breakEffect.spawn("Wm_en_splunkinbreak_b", 0, &(Vec){pos.x, pos.y+8.0, pos.z}, (S16Vec *)0, &(Vec){1.5, 1.5, 1.5});
         Vec2 killSpeed;
         killSpeed.y = speed.y;
         killSpeed.x = speed.x;
@@ -158,131 +152,4 @@ void daEnKabochan_c::playWalkAnim() {
     anmClr.setFrameForEntry(0, 0);
     model.bindAnim(&anmClr, 1.0);
     return;
-}
-
-class dPumpkinEffects_c : public dStageActor_c {
-    public:
-        mHeapAllocator_c allocator;
-
-		nw4r::g3d::ResFile resFile;
-		m3d::mdl_c model;
-        m3d::anmChr_c anmChr;
-        nw4r::g3d::ResAnmTexPat resPat;
-        m3d::anmTexPat_c anmTexPat;
-
-        int fragID;
-        bool isBig;
-        bool isGreen;
-
-        int onCreate();
-        int onDraw();
-		int onExecute();
-
-        void updateModelMatrices();
-
-        static dActor_c *build();
-};
-
-dActor_c *dPumpkinEffects_c::build() {
-	void *buffer = AllocFromGameHeap1(sizeof(dPumpkinEffects_c));
-	return new(buffer) dPumpkinEffects_c;
-}
-
-const SpriteData PumpEffSpriteData = {ProfileId::AC_KABOEFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-Profile PumpEffProfile(&dPumpkinEffects_c::build, NULL, &PumpEffSpriteData, ProfileId::AC_KABOEFF, ProfileId::AC_KABOEFF, "AC_KABOEFF");
-
-Vec fragSpeeds[5] = {
-    {0.7, 1.6, 0.0},
-    {0.1, 1.7, 0.0},
-    {-0.06, 2.0, 0.0},
-    {-0.4, 1.9, 0.0},
-    {-0.9, 1.37, 0.0}
-};
-
-int dPumpkinEffects_c::onCreate() {
-    fragID = settings & 0xF;
-    isBig = settings >> 4 & 1;
-    isGreen = settings >> 5 & 1;
-
-    allocator.link(-1, GameHeaps[0], 0, 0x20);
-
-    resFile.data = getResource("kabochan", "g3d/kabochan.brres");
-    nw4r::g3d::ResMdl bmdl;
-    u32 rand = MakeRandomNumber(2);
-    if (rand == 0) {
-        bmdl = resFile.GetResMdl("FX_Pumpkin");
-    } else {
-        bmdl = resFile.GetResMdl("FX_Pumpkin2");
-    }
-	model.setup(bmdl, &allocator, 0x227, 1, 0);
-	SetupTextures_Enemy(&model, 0);
-
-    resPat = resFile.GetResAnmTexPat("FX_Pumpkin");
-	anmTexPat.setup(bmdl, resPat, &allocator, 0, 1);
-    model.bindAnim(&anmTexPat, 0.0);
-    anmTexPat.setUpdateRateForEntry(0.0f, 0);
-    anmTexPat.setFrameForEntry(isGreen, 0);
-
-    nw4r::g3d::ResAnmChr resAnmChr = resFile.GetResAnmChr("shrink");
-    anmChr.setup(bmdl, resAnmChr, &allocator, 0);
-	anmChr.bind(&model, resAnmChr, 1);
-	model.bindAnim(&anmChr, 0);
-	anmChr.setUpdateRate(0.5f);
-
-    allocator.unlink();
-
-    if (isBig) {
-        scale = (Vec){0.55, 0.55, 0.55};
-    } else {
-        scale = (Vec){0.3, 0.3, 0.3};
-    }
-
-    float scaleMod = ((MakeRandomNumber(10) / 10) * scale.x);
-    scale = (Vec){scale.x - scaleMod, scale.y - scaleMod, scale.z - scaleMod}; 
-
-    pos.z += 100.0;
-
-    y_speed_inc = -0.05;
-    max_speed.x = speed.x;
-    max_speed.y = -2.0;
-    max_speed.z = 0.0;
-
-    speed = fragSpeeds[fragID];
-
-    rot.x = MakeRandomNumber(0xFFFF);
-    rot.y = MakeRandomNumber(0xFFFF);
-    rot.z = MakeRandomNumber(0xFFFF);
-
-    onExecute();
-
-    return true;
-}
-
-int dPumpkinEffects_c::onDraw() {
-    model.scheduleForDrawing();
-    return true;
-}
-
-int dPumpkinEffects_c::onExecute() {
-    model._vf1C();
-    rot.x += 0x400;
-    rot.y += 0x400;
-    rot.z += 0x400;
-    updateModelMatrices();
-    if (anmChr.isAnimationDone()) {
-        Delete(1);
-    }
-    HandleYSpeed();
-    UpdateObjectPosBasedOnSpeedValuesReal();
-    return true;
-}
-
-void dPumpkinEffects_c::updateModelMatrices() {
-	// This won't work with wrap because I'm lazy.
-	matrix.translation(pos.x, pos.y, pos.z);
-	matrix.applyRotationYXZ(&rot.x, &rot.y, &rot.z);
-
-	model.setDrawMatrix(matrix);
-	model.setScale(&scale);
-	model.calcWorld(false);
 }

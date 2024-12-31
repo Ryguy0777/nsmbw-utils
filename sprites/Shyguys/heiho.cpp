@@ -71,7 +71,7 @@ int daEnHeiho_c::onCreate() {
 }
 
 void daEnHeiho_c::dieFall_Begin() {
-    playChrAnim("diefall", 0, 0.0, 2.0);
+    playChrAnim("diefall", 0, 0.0, 1.0);
     return dEn_c::dieFall_Begin();
 }
 
@@ -107,7 +107,7 @@ extern "C" void __destroy_arr(void*, void(*)(void), int, int);
 //extern "C" __destroy_arr(struct DoSomethingCool, void(*)(void), int cnt, int bar);
 
 bool daEnHeiho_c::CreateIceActors() {
-	struct DoSomethingCool my_struct = { 0, {pos.x, pos.y-2.3, pos.z}, {1.3, 1.5, 1.5}, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+	struct DoSomethingCool my_struct = { 0, {pos.x, pos.y-3.8, pos.z}, {1.3, 1.5, 1.5}, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
     frzMgr.Create_ICEACTORs( (void*)&my_struct, 1 );
     __destroy_arr( (void*)&my_struct, sub_80024C20, 0x3C, 1 );
     return true;
@@ -146,9 +146,9 @@ void daEnHeiho_c::loadModel() {
 }
 
 void daEnHeiho_c::initialize() {
-    scale.x = 2.2;
-    scale.y = 2.2;
-    scale.z = 2.2;
+    scale.x = 1.0;
+    scale.y = 1.0;
+    scale.z = 1.0;
 
     //tile collider
 	static const lineSensor_s below(-4<<12, 4<<12, 0<<12);
@@ -371,7 +371,7 @@ void daEnHeiho_c::executeState_TrplnJump() {
 
     //hit a wall?
     if (dEn_c_EnBgCheck(this) & 4) {
-        direction = direction^1;
+        direction ^= 1;
         speed.x = -speed.x;
     }
     //touching ground?

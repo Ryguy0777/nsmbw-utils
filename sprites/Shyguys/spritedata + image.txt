@@ -58,6 +58,24 @@
 	<dualbox nybble="10.4" title1="Spawns Left" title2="Spawns Right" requirednybble="5" requiredval="3-4"/>
   </sprite> <!-- #XXX: Bubble Shy Guy -->
 
+  <sprite id="XXX" name="Climbing Shy Guy" notes="A Shy guy that climbs on wire fences. The Shy guy can punch the player if on the other side of the fence.">
+	<list nybble="6" title="Color">
+	  <entry value="0">Red</entry>
+	  <entry value="1">Pink</entry>
+	  <entry value="2">Yellow</entry>
+	  <entry value="3">Blue</entry>
+	  <entry value="4">Green</entry>
+	  <entry value="5">Black</entry>
+	  <entry value="6">White</entry>
+	  <entry value="7">Light Blue</entry>
+	  <entry value="8">Orange</entry>
+	  <entry value="9">Purple</entry>
+	</list>
+	<checkbox nybble="8.1" title="Attacks" comment="When enabled, the Shy Guy will attempt to punch the other side of the Chainlink Fence if the player is on the other side."/>
+	<checkbox nybble="8.2" title="Moves Up/Down"/>
+	<checkbox nybble="8.4" title="Starts Behind Fence" comment="When enabled, the Shy Guy will be placed on the reverse side of the Chainlink Fence."/>
+  </sprite> <!-- #XXX: Climbing Shy Guy -->
+
 class SpriteImage_Shyguy(SLib.SpriteImage_StaticMultiple):
     def __init__(self, parent):
         super().__init__(
@@ -110,10 +128,34 @@ class SpriteImage_ShyguyBubble(SLib.SpriteImage_StaticMultiple):
         
     def dataChanged(self):
         
-        moving = self.parent.spritedata[3] >> 4 & 0xF
+        moving = self.parent.spritedata[3] >> 5 & 3
         if moving > 0:
             self.image = ImageCache['ShyguyBubble2']
             self.offset = (-10.75, -13)
         else:
             self.image = ImageCache['ShyguyBubble']
             self.offset = (-10.75, -13)
+
+class SpriteImage_ShyguyClimb(SLib.SpriteImage_StaticMultiple):
+    def __init__(self, parent):
+        super().__init__(
+            parent,
+            1.5,
+            ImageCache['ShyguyClimbH'],
+            (-2, -5),
+        )
+
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('ShyguyClimbH', 'shyguy_climb_h.png')
+        SLib.loadIfNotInImageCache('ShyguyClimbV', 'shyguy_climb_v.png')
+        
+    def dataChanged(self):
+        
+        vertical = self.parent.spritedata[3] >> 2 & 1
+        if vertical:
+            self.image = ImageCache['ShyguyClimbV']
+            self.offset = (-2, -5)
+        else:
+            self.image = ImageCache['ShyguyClimbH']
+            self.offset = (-2, -5)

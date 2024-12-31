@@ -1,0 +1,20 @@
+---
+source_files: [../src/heiho.cpp, ../src/heiho_bubble.cpp, ../src/heiho_net.cpp, ../src/heiho_net.S, ../src/heiho_fly.cpp]
+hooks: 
+  - name: addShyguyCheckToFlipPanel
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80aca5b8
+    target_func: 'PatchWireIDs'
+  
+  - name: addShyguyCheckToFlipPanel2
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80868710
+    target_func: 'PatchWireIDs2'
+  
+  - name: fixIceClimbEnemyBug
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80044994
+    target_func: 'fixIceBug'

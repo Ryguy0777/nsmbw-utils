@@ -1,0 +1,8 @@
+---
+source_files: [../src/nipperplant.cpp, ../src/nipperplant_fire.cpp, ../src/nipperplant_fire.S]
+hooks: 
+  - name: addNipperFireCheckToFreezer
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x807f8104
+    target_func: 'AddNipperFire'

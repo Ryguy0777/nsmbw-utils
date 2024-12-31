@@ -295,9 +295,9 @@ void daEnHeihoBubble_c::drawModel() {
 }
 
 void daEnHeihoBubble_c::initialize() {
-    scale.x = 2.2;
-    scale.y = 2.2;
-    scale.z = 2.2;
+    scale.x = 1.0;
+    scale.y = 1.0;
+    scale.z = 1.0;
 
     //tile collider
 	static const lineSensor_s below(-4<<12, 4<<12, 0<<12);
