@@ -1,5 +1,5 @@
 ---
-source_files: [../src/heiho.cpp, ../src/heiho_bubble.cpp, ../src/heiho_net.cpp, ../src/heiho_net.S, ../src/heiho_fly.cpp]
+source_files: [../src/heiho.cpp, ../src/heiho_bubble.cpp, ../src/heiho_net.cpp, ../src/heiho_net.S]
 hooks: 
   - name: addShyguyCheckToFlipPanel
     type: branch_insn
