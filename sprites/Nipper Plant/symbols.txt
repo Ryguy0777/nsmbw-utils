@@ -38,6 +38,8 @@
 	killFireBall__17daFireBall_Base_cFv = 0x80040ec0;
 	continueToMeltIce = 0x807f810c;
 	dontMeltTheIce = 0x807f812c;
+	eatIn__17daFireBall_Base_cFv = 0x80040F10;
+	disableEatIn__17daFireBall_Base_cFv = 0x800413F0;
 
 	StateID_Move__17daFireBall_Base_cFv = 0x8035420C;
 	StateID_Kill__17daFireBall_Base_cFv = 0x8035424C;
