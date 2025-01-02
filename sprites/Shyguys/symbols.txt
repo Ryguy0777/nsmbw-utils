@@ -8,3 +8,17 @@
 	getNearestPlayerYDirection = 0x800962a0;
 	continueWithNetExecute = 0x80044998;
 	dontFlip = 0x80044a60;
+
+	__vt__12daNetEnemy_c = 0x80307880;
+	__dt__12daNetEnemy_cFv = 0x80036330;
+	onExecute__12daNetEnemy_cFv = 0x80044960;
+	mdlPlay__12daNetEnemy_cFv = 0x80307b18;
+	finalizeState_NetMove__12daNetEnemy_cFv = 0x80044b90;
+	executeState_NetMove__12daNetEnemy_cFv = 0x80044bf0;
+	initializeState_NetMove__12daNetEnemy_cFv = 0x80044b80;
+	finalizeState_NetWait__12daNetEnemy_cFv = 0x80044ae0;
+	executeState_NetWait__12daNetEnemy_cFv = 0x80044af0;
+	initializeState_NetWait__12daNetEnemy_cFv = 0x80044ad0;
+	calcMdl__12daNetEnemy_cFv = 0x80044ab0;
+	StateID_NetWait__12daNetEnemy_c = 0x8035448c;
+	StateID_NetMove__12daNetEnemy_c = 0x803544cc;
