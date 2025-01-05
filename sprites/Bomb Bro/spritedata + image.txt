@@ -1,0 +1,15 @@
+  <sprite id="XXX" name="Bomb Bro" notes="A standard Brothers enemy that throws bombs at the player.">
+  </sprite> <!-- #XXX: Bomb Bro -->
+
+class SpriteImage_BombBro(SLib.SpriteImage_Static):
+    def __init__(self, parent, scale=1.5):
+        super().__init__(
+            parent,
+            scale,
+            ImageCache['BombBro'],
+            (-4, -21)
+        )
+
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('BombBro', 'bombbro.png')
