@@ -16,7 +16,7 @@ const char* heihoArcList [] = {
 };
 
 const SpriteData heihoSpriteData = {ProfileId::EN_HEIHO, 8, -16, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile heihoProfile(&daEnHeiho_c::build, SpriteId::EN_HEIHO, &heihoSpriteData, ProfileId::EN_HEIHO, ProfileId::EN_HEIHO, "EN_HEIHO", heihoArcList, 0x12);
+Profile heihoProfile(&daEnHeiho_c::build, SpriteId::EN_HEIHO, &heihoSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_HEIHO, "EN_HEIHO", heihoArcList, 0x12);
 
 int daEnHeiho_c::onCreate() {
     //new stuff

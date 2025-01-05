@@ -1,8 +1,6 @@
 	/* Galoomba, Para Galoomba, & Goombud*/
 	getAnkleCenterPos = 0x800582f0;
 	itemPickedUp__13dStageActor_cFP13dStageActor_c = 0x80065820;
-	startEnemySound = 0x80198040;
-	cvtSndObjctPos = 0x8006a4b0;
 	EnBgCheckWall = 0x80097050;
 	EnBgCheckFoot = 0x80096f60;
 	calcCarryPos = 0x80097a20;

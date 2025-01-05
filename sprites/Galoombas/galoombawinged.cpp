@@ -71,7 +71,7 @@ const char* PataGaloombaArcList[] = {
 };
 
 const SpriteData PataGaloombaSpriteData = {ProfileId::EN_PATA_KURIBON, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile PataGaloombaProfile(&daEnPataKuribon_c::build, SpriteId::EN_PATA_KURIBON, &PataGaloombaSpriteData, ProfileId::EN_PATA_KURIBON, ProfileId::EN_PATA_KURIBON, "EN_PATA_KURIBON", PataGaloombaArcList, 0x12);
+Profile PataGaloombaProfile(&daEnPataKuribon_c::build, SpriteId::EN_PATA_KURIBON, &PataGaloombaSpriteData, ProfileId::EN_PATA_KURIBO, ProfileId::EN_PATA_KURIBON, "EN_PATA_KURIBON", PataGaloombaArcList, 0x12);
 
 int daEnPataKuribon_c::onCreate() {
     createModel();

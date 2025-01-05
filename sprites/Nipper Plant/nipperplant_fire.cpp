@@ -17,7 +17,7 @@ dActor_c *daFireBall_Nipper_c::build() {
 	return new(buffer) daFireBall_Nipper_c;
 }
 
-Profile NipperFireProfile(&daFireBall_Nipper_c::build, ProfileId::AC_PAKKUN_PUCHI_FIRE, NULL, ProfileId::AC_PAKKUN_PUCHI_FIRE, ProfileId::PL_FIREBALL, "AC_PAKKUN_PUCHI_FIRE", NULL, 0x22);
+Profile NipperFireProfile(&daFireBall_Nipper_c::build, ProfileId::AC_PAKKUN_PUCHI_FIRE, NULL, ProfileId::PAKKUN_FIREBALL, ProfileId::AC_PAKKUN_PUCHI_FIRE, "AC_PAKKUN_PUCHI_FIRE", NULL, 0x22);
 
 void daFireBall_Nipper_c::executeState_Move() {
     HandleYSpeed();

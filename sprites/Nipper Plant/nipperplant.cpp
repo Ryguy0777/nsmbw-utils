@@ -80,7 +80,7 @@ const char* NipperArcList [] = {
 };
 
 const SpriteData NipperSpriteData = {ProfileId::EN_PUCHI_PAKKUN, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile NipperProfile(&daEnPuchiPakkun_c::build, SpriteId::EN_PUCHI_PAKKUN, &NipperSpriteData, ProfileId::EN_PUCHI_PAKKUN, ProfileId::EN_PUCHI_PAKKUN, "EN_PUCHI_PAKKUN", NipperArcList, 0x12);
+Profile NipperProfile(&daEnPuchiPakkun_c::build, SpriteId::EN_PUCHI_PAKKUN, &NipperSpriteData, ProfileId::EN_BLACK_PAKKUN, ProfileId::EN_PUCHI_PAKKUN, "EN_PUCHI_PAKKUN", NipperArcList, 0x12);
 
 int daEnPuchiPakkun_c::onCreate() {
     //set angles for turning and walking

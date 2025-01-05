@@ -23,7 +23,7 @@ const char* GoombudArcList[] = {
 };
 
 const SpriteData GoombudSpriteData = {ProfileId::EN_KAKIBON, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile GoombudProfile(&daEnKakibon_c::build, SpriteId::EN_KAKIBON, &GoombudSpriteData, ProfileId::EN_KAKIBON, ProfileId::EN_KAKIBON, "EN_KAKIBON", GoombudArcList, 0x12);
+Profile GoombudProfile(&daEnKakibon_c::build, SpriteId::EN_KAKIBON, &GoombudSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_KAKIBON, "EN_KAKIBON", GoombudArcList, 0x12);
 
 u16 kakibonAngles[2] = {0x2000, 0xE000};
 

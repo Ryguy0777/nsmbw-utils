@@ -43,7 +43,7 @@ const char* SplunkinArcList [] = {
 };
 
 const SpriteData SplunkinSpriteData = {ProfileId::EN_KABOCHAN, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile SplunkinProfile(&daEnKabochan_c::build, SpriteId::EN_KABOCHAN, &SplunkinSpriteData, ProfileId::EN_KABOCHAN, ProfileId::EN_KABOCHAN, "EN_KABOCHAN", SplunkinArcList, 0x12);
+Profile SplunkinProfile(&daEnKabochan_c::build, SpriteId::EN_KABOCHAN, &SplunkinSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_KABOCHAN, "EN_KABOCHAN", SplunkinArcList, 0x12);
 
 int daEnKabochan_c::onCreate() {
     isCracked = false;

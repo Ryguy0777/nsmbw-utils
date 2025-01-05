@@ -83,7 +83,7 @@ const char* heihoBubbleArcList [] = {
 };
 
 const SpriteData heihoBubbleSpriteData = {ProfileId::EN_HEIHO_BALLOON, 8, -16, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile heihoBubbleProfile(&daEnHeihoBubble_c::build, SpriteId::EN_HEIHO_BALLOON, &heihoBubbleSpriteData, ProfileId::EN_HEIHO_BALLOON, ProfileId::EN_HEIHO_BALLOON, "EN_HEIHO_BALLOON", heihoBubbleArcList, 0x12);
+Profile heihoBubbleProfile(&daEnHeihoBubble_c::build, SpriteId::EN_HEIHO_BALLOON, &heihoBubbleSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_HEIHO_BALLOON, "EN_HEIHO_BALLOON", heihoBubbleArcList, 0x12);
 
 int daEnHeihoBubble_c::onCreate() {
     //bubble stuff

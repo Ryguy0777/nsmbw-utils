@@ -17,7 +17,7 @@ const char* GaloombaArcList[] = {
 };
 
 const SpriteData GaloombaSpriteData = {ProfileId::EN_KURIBON, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
-Profile GaloombaProfile(&daEnKuribon_c::build, SpriteId::EN_KURIBON, &GaloombaSpriteData, ProfileId::EN_KURIBON, ProfileId::EN_KURIBON, "EN_KURIBON", GaloombaArcList, 0x12);
+Profile GaloombaProfile(&daEnKuribon_c::build, SpriteId::EN_KURIBON, &GaloombaSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_KURIBON, "EN_KURIBON", GaloombaArcList, 0x12);
 
 int daEnKuribon_c::onCreate() {
     createModel();
