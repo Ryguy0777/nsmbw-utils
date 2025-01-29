@@ -620,8 +620,10 @@ void daEnPataKuribon_c::executeState_Recover() {
     updateModel();
     HandleYSpeed();
     doSpriteMovement();
+    
+    u8 BgCheck = dEn_c_EnBgCheck(this);
 
-    if (dEn_c_EnBgCheck(this)) {
+    if (BgCheck) {
         if (isOnEnLiftRemoconTrpln()) {
             //bounce galoomba if on bouncy stuff
             speed.y = 5.5;
@@ -634,7 +636,7 @@ void daEnPataKuribon_c::executeState_Recover() {
         s16 recoverAngles[2] = {0x2000, 0xE000};
         rot.y = recoverAngles[direction];
         rot.x = 0;
-        if (dEn_c_EnBgCheck(this)) {
+        if (BgCheck) {
             speed.y = 2.0;
         }
     }

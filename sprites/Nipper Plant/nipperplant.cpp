@@ -430,13 +430,18 @@ void daEnPuchiPakkun_c::executeState_Walk() {
     doSpriteMovement();
     SmoothRotation(&rot.y, nipperAngles[direction], 0x500);
 
-    if (!(dEn_c_EnBgCheck(this))) {
+    u8 BgCheck = dEn_c_EnBgCheck(this);
+
+    if (!BgCheck) {
         if (collMgr.isOnTopOfTile() && (_45D == false) && (speed.y <= 0.0f)) {
             velocity2.x = velocity2.x + _310;
         }
     } else {
         if (collMgr.outputMaybe & 0x15 << direction & 0x3f) {
-            doStateChange(&StateID_Turn);
+            speed.x = 0.0;
+            if (BgCheck & 1) {
+                doStateChange(&StateID_Turn);
+            }
         } else {
             velocity2.x = 0.0;
             speed.y = 1.2;
@@ -580,6 +585,10 @@ void daEnPuchiPakkun_c::executeState_IceWait() {
 
 void daEnPuchiPakkun_c::endState_IceWait() { }
 
+extern "C" void startEnemySound(void*,SFX,Vec2*,int);
+extern "C" void cvtSndObjctPos(Vec2 *out, Vec *stage_pos);
+extern void *SoundClassRelated;
+
 void daEnPuchiPakkun_c::beginState_FireSpit() {
     playChrAnim("spit", 0, 0.0, 1.0, false);
     fireTimer = 15;
@@ -593,8 +602,9 @@ void daEnPuchiPakkun_c::executeState_FireSpit() {
 
     if (fireTimer == 15 && isPlayerInFireRange()) {
         create(AC_PAKKUN_PUCHI_FIRE, fireDist << 4 | fireDirection, &(Vec){pos.x, pos.y + 10.0, pos.z}, &rot, currentLayerID);
-        nw4r::snd::SoundHandle handle;
-        PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_EMY_FIRE_BROS_FIRE, 0);
+        Vec2 soundPos;
+        cvtSndObjctPos(&soundPos, &pos);
+        startEnemySound(SoundClassRelated, SE_EMY_FIRE_BROS_FIRE, &soundPos, 0);
         spatFireCount++;
         fireTimer = 0;
     }

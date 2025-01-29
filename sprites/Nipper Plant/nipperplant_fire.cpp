@@ -19,14 +19,16 @@ dActor_c *daFireBall_Nipper_c::build() {
 
 Profile NipperFireProfile(&daFireBall_Nipper_c::build, ProfileId::AC_PAKKUN_PUCHI_FIRE, NULL, ProfileId::PAKKUN_FIREBALL, ProfileId::AC_PAKKUN_PUCHI_FIRE, "AC_PAKKUN_PUCHI_FIRE", NULL, 0x22);
 
+extern "C" void cvtSndObjctPos(Vec2 *out, Vec *stage_pos);
 void daFireBall_Nipper_c::executeState_Move() {
     HandleYSpeed();
     UpdateObjectPosBasedOnSpeedValuesReal();
 
     if (collMgr.calculateBelowCollision() || collMgr.calculateAboveCollision(0) || collMgr.calculateAdjacentCollision()) {
         killFireBall();
-        nw4r::snd::SoundHandle handle;
-        PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_OBJ_EMY_FIRE_DISAPP, 0);
+        Vec2 soundPos;
+        cvtSndObjctPos(&soundPos, &pos);
+        SoundPlayingClass::instance2->PlaySoundAtPosition(SE_OBJ_EMY_FIRE_DISAPP, &soundPos, 1);
     }
 }
 

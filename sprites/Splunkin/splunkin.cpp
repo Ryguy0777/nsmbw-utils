@@ -85,7 +85,7 @@ bool daEnKabochan_c::CreateIceActors() {
     return true;
 }
 
-
+//have to use PlaySoundWithFunctionB4 until pysar is finished and I can add the sfx the correct way
 void daEnKabochan_c::_vf260(void *other) {
     int sfxID = (isCracked) ? SFX_SE_EMY_KABOCHAN_KILL : SFX_SE_EMY_KABOCHAN_BREAK;
     float sfxVol = (isCracked) ? 3.0 : 2.0;

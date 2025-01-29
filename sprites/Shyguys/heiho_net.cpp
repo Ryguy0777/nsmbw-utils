@@ -565,14 +565,17 @@ void daEnHeihoNet_c::executeState_Turn() {
 
 void daEnHeihoNet_c::endState_Turn() { }
 
+extern "C" void MtxToVec(Mtx *, Vec3 *);
+extern "C" void startEnemySound(void*,SFX,Vec2*,int);
+extern "C" void cvtSndObjctPos(Vec2 *out, Vec *stage_pos);
+extern void *SoundClassRelated;
+
 void daEnHeihoNet_c::beginState_Attack() {
     attackTimer = 150;
     playChrAnim("attack", 1, 0.0, 1.0);
     speed.x = 0.0;
     speed.y = 0.0;
 }
-
-extern "C" void MtxToVec(Mtx *, Vec3 *);
 
 void daEnHeihoNet_c::executeState_Attack() {
     mdlPlay();
@@ -585,8 +588,9 @@ void daEnHeihoNet_c::executeState_Attack() {
         MtxToVec(&handMtx, &handPos);
 
         SpawnEffect("Wm_mr_wirehit", 0, &handPos, (S16Vec *)0, (Vec *)0);
-        nw4r::snd::SoundHandle handle;
-        PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_PLY_ATTACK_FENCE, 0);
+        Vec2 soundPos;
+        cvtSndObjctPos(&soundPos, &pos);
+        startEnemySound(SoundClassRelated, SE_PLY_ATTACK_FENCE, &soundPos, 0);
     }
 
     if (anmChr.getCurrentFrame() > 10.0) {

@@ -18,58 +18,6 @@ const char* heihoArcList [] = {
 const SpriteData heihoSpriteData = {ProfileId::EN_HEIHO, 8, -16, 0, 8, 8, 8, 0, 0, 0, 0, 0};
 Profile heihoProfile(&daEnHeiho_c::build, SpriteId::EN_HEIHO, &heihoSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_HEIHO, "EN_HEIHO", heihoArcList, 0x12);
 
-int daEnHeiho_c::onCreate() {
-    //new stuff
-    hhAngles[0] = 0x2000;
-    hhAngles[1] = 0xE000;
-
-    type = (heyhoTypes)(settings >> 28 & 0xF);
-    color = settings >> 24 & 0xF;
-    health = settings >> 17 & 1;
-    distance = settings >> 12 & 0xF;
-    spawnDir = (settings >> 8 & 1)^1;
-
-    //kuriboBase stuff
-    createModel();
-
-    ActivePhysics::Info heiho_cc;
-
-    heiho_cc.xDistToCenter = 0.0;
-	heiho_cc.yDistToCenter = 10.0;
-	heiho_cc.xDistToEdge = 8.0;
-	heiho_cc.yDistToEdge = 10.0;
-	heiho_cc.category1 = 0x3;
-	heiho_cc.category2 = 0x0;
-	heiho_cc.bitfield1 = 0x6F;
-	heiho_cc.bitfield2 = 0xffbafffe;
-	heiho_cc.unkShort1C = 0;
-	heiho_cc.callback = &dEn_c::collisionCallback;
-
-    aPhysics.initWithStruct(this, &heiho_cc);
-    aPhysics.addToList();
-    
-    max_speed.y = -4.0;
-
-    int directionToUse;
-    if (type < Jumper || type > Pacer) {
-        directionToUse = dSprite_c__getXDirectionOfFurthestPlayerRelativeToVEC3(this, pos);
-    } else {
-        directionToUse = spawnDir;
-    }
-
-    direction = directionToUse;
-	rot.y = hhAngles[directionToUse];
-
-    appearsOnBackFence = settings >> 16 & 1;
-    zOffset = 0.0;
-    chkZoneBoundParam = 0;
-    _518 = 0;
-
-    initialize();
-    
-    return true;
-}
-
 void daEnHeiho_c::dieFall_Begin() {
     playChrAnim("diefall", 0, 0.0, 1.0);
     return dEn_c::dieFall_Begin();
@@ -146,6 +94,12 @@ void daEnHeiho_c::loadModel() {
 }
 
 void daEnHeiho_c::initialize() {
+    type = (heyhoTypes)(settings >> 28 & 0xF);
+    color = settings >> 24 & 0xF;
+    health = settings >> 17 & 1;
+    distance = settings >> 12 & 0xF;
+    spawnDir = (settings >> 8 & 1)^1;
+    
     scale.x = 1.0;
     scale.y = 1.0;
     scale.z = 1.0;
@@ -172,6 +126,24 @@ void daEnHeiho_c::initialize() {
 
     float zPositions[2] = {1500.0, -2500.0};
     pos.z = zPositions[appearsOnBackFence];
+
+    hhAngles[0] = 0x2000;
+    hhAngles[1] = 0xE000;
+
+    aPhysics.info.xDistToCenter = 0.0;
+	aPhysics.info.yDistToCenter = 10.0;
+	aPhysics.info.xDistToEdge = 8.0;
+	aPhysics.info.yDistToEdge = 10.0;
+
+    int directionToUse;
+    if (type < Jumper || type > Pacer) {
+        directionToUse = dSprite_c__getXDirectionOfFurthestPlayerRelativeToVEC3(this, pos);
+    } else {
+        directionToUse = spawnDir;
+    }
+
+    direction = directionToUse;
+	rot.y = hhAngles[directionToUse];
 
     //set walking distances for pacer
     if (type == Pacer) {
@@ -369,13 +341,14 @@ void daEnHeiho_c::executeState_TrplnJump() {
     doSpriteMovement();
     bool doneTurning = SmoothRotation(&rot.y, hhAngles[direction], 0x800);
 
+    u8 BgCheck = dEn_c_EnBgCheck(this);
     //hit a wall?
-    if (dEn_c_EnBgCheck(this) & 4) {
+    if (BgCheck & 4) {
         direction ^= 1;
         speed.x = -speed.x;
     }
     //touching ground?
-    if (dEn_c_EnBgCheck(this) & 1) {
+    if (BgCheck & 1) {
         speed.y = 0.0;
         if (!isOnEnLiftRemoconTrpln()) {
             if (doneTurning) {
@@ -421,14 +394,15 @@ void daEnHeiho_c::executeState_Sleep() {
 
 void daEnHeiho_c::endState_Sleep() { }
 
-extern "C" u32 EnBgCheckFoot(dEn_c *);
+extern "C" void startEnemySound(void*,SFX,Vec2*,int);
+extern "C" void cvtSndObjctPos(Vec2 *out, Vec *stage_pos);
+extern void *SoundClassRelated;
 
 void daEnHeiho_c::beginState_Jump() {
 	max_speed.x = 0.0;
 	speed.x = 0.0;
 	x_speed_inc = 0.0;
 
-	timer = 0;
 	jumpCounter = 0;
 
     y_speed_inc = -0.1875;
@@ -440,14 +414,17 @@ void daEnHeiho_c::executeState_Jump() {
     HandleYSpeed();
     doSpriteMovement();
 
+    u8 BgCheck = dEn_c_EnBgCheck(this);
     // touching ceiling
-    if (dEn_c_EnBgCheck(this) & 2) {
+    if (BgCheck & 2) {
         speed.y = 0.0;
     }
 
     // Shy Guy is on ground
-	if (dEn_c_EnBgCheck(this) & 1) {
-        speed.y = 0.0;
+	if (BgCheck & 1) {
+        Vec2 soundPos;
+        cvtSndObjctPos(&soundPos, &pos);
+        
 		if (jumpCounter == 3) { jumpCounter = 0; }
 
 		jumpCounter = jumpCounter + 1;
@@ -456,11 +433,11 @@ void daEnHeiho_c::executeState_Jump() {
 		if (jumpCounter == 3) {
 			playChrAnim("jump2", 1, 0.0, 0.6);
 			speed.y = 6.0;
-			PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_PLY_JUMPDAI_HIGH, 1);
+			startEnemySound(SoundClassRelated, SE_PLY_JUMPDAI_HIGH, &soundPos, 0);
 		} else {
             playChrAnim("jump", 1, 0.0, 0.45);
             speed.y = 4.5;
-            PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_PLY_JUMPDAI, 1);
+            startEnemySound(SoundClassRelated, SE_PLY_JUMPDAI, &soundPos, 0);
 	    }
 	}
 

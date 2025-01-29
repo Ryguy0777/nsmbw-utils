@@ -544,16 +544,25 @@ void daEnKuribon_c::executeState_Recover() {
     updateModel();
     HandleYSpeed();
     doSpriteMovement();
+    
+    u8 BgCheck = dEn_c_EnBgCheck(this);
 
-    if (dEn_c_EnBgCheck(this)) {
-        speed.y = 0.0;
+    if (BgCheck) {
+        if (isOnEnLiftRemoconTrpln()) {
+            //bounce galoomba if on bouncy stuff
+            speed.y = 5.5;
+        } else {
+            speed.y = 0.0;
+        }
     }
 
     if (anmChr.getCurrentFrame() == 42.0) {
         s16 recoverAngles[2] = {0x2000, 0xE000};
         rot.y = recoverAngles[direction];
         rot.x = 0;
-        speed.y = 2.0;
+        if (BgCheck) {
+            speed.y = 2.0;
+        }
     }
 
     if (anmChr.isAnimationDone()) {

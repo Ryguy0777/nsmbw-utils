@@ -87,10 +87,7 @@ Profile heihoBubbleProfile(&daEnHeihoBubble_c::build, SpriteId::EN_HEIHO_BALLOON
 
 int daEnHeihoBubble_c::onCreate() {
     //bubble stuff
-    isBubble = true;
-    popsSensor = settings >> 23 & 1;
-    bubbleMovement = settings >> 21 & 3;
-    bubbleDistance = settings >> 4 & 0xF;
+    
     
     return daEnHeiho_c::onCreate();
 }
@@ -295,6 +292,17 @@ void daEnHeihoBubble_c::drawModel() {
 }
 
 void daEnHeihoBubble_c::initialize() {
+    isBubble = true;
+    popsSensor = settings >> 23 & 1;
+    bubbleMovement = settings >> 21 & 3;
+    bubbleDistance = settings >> 4 & 0xF;
+
+    type = (heyhoTypes)(settings >> 28 & 0xF);
+    color = settings >> 24 & 0xF;
+    health = settings >> 17 & 1;
+    distance = settings >> 12 & 0xF;
+    spawnDir = (settings >> 8 & 1)^1;
+
     scale.x = 1.0;
     scale.y = 1.0;
     scale.z = 1.0;
@@ -321,6 +329,14 @@ void daEnHeihoBubble_c::initialize() {
 
     float zPositions[2] = {1500.0, -2500.0};
     pos.z = zPositions[appearsOnBackFence];
+
+    hhAngles[0] = 0x2000;
+    hhAngles[1] = 0xE000;
+
+    aPhysics.info.xDistToCenter = 0.0;
+	aPhysics.info.yDistToCenter = 10.0;
+	aPhysics.info.xDistToEdge = 8.0;
+	aPhysics.info.yDistToEdge = 10.0;
 
     doStateChange(&StateID_Bubble);
     return;
@@ -350,11 +366,16 @@ void daEnHeihoBubble_c::updateModel() {
     }
 }
 
+extern "C" void startEnemySound(void*,SFX,Vec2*,int);
+extern "C" void cvtSndObjctPos(Vec2 *out, Vec *stage_pos);
+extern void *SoundClassRelated;
+
 void daEnHeihoBubble_c::popBubble(dStageActor_c *killer) {
     isBubble = false;
     SpawnEffect("Wm_mr_balloonburst", 0, &(Vec){pos.x, pos.y + 10, 0}, (S16Vec *)0, (Vec *)0);
-    nw4r::snd::SoundHandle handle;
-    PlaySoundWithFunctionB4(SoundRelatedClass, &handle, SE_PLY_BALLOON_BRAKE, 1);
+    Vec2 soundPos;
+    cvtSndObjctPos(&soundPos, &pos);
+    startEnemySound(SoundClassRelated, SE_PLY_BALLOON_BRAKE, &soundPos, 0);
     bubbleCollider.removeFromList();
     if (killer) {
         if (type < Jumper || type > Pacer) {
