@@ -19,41 +19,6 @@ const char* GaloombaArcList[] = {
 const SpriteData GaloombaSpriteData = {ProfileId::EN_KURIBON, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
 Profile GaloombaProfile(&daEnKuribon_c::build, SpriteId::EN_KURIBON, &GaloombaSpriteData, ProfileId::EN_KURIBO, ProfileId::EN_KURIBON, "EN_KURIBON", GaloombaArcList, 0x12);
 
-int daEnKuribon_c::onCreate() {
-    createModel();
-
-    ActivePhysics::Info kuribon_cc;
-
-    kuribon_cc.xDistToCenter = 0.0;
-	kuribon_cc.yDistToCenter = 8.0;
-	kuribon_cc.xDistToEdge = 8.0;
-	kuribon_cc.yDistToEdge = 8.0;
-	kuribon_cc.category1 = 0x3;
-	kuribon_cc.category2 = 0x0;
-	kuribon_cc.bitfield1 = 0x6F;
-	kuribon_cc.bitfield2 = 0xFFBEFFFE;
-	kuribon_cc.unkShort1C = 0;
-	kuribon_cc.callback = &dEn_c::collisionCallback;
-
-    aPhysics.initWithStruct(this, &kuribon_cc);
-    aPhysics.addToList();
-    
-    max_speed.y = -4.0;
-
-    s16 angles[2] = {0x2000, 0xE000};
-    direction = dSprite_c__getXDirectionOfFurthestPlayerRelativeToVEC3(this, pos);
-	rot.y = angles[direction];
-
-    appearsOnBackFence = settings >> 16 & 1;
-    zOffset = 0.0;
-    chkZoneBoundParam = 0;
-    _518 = 0;
-
-    initialize();
-    
-    return true;
-}
-
 int daEnKuribon_c::_vf74() {
     dStateBase_c *state = acState.getCurrentState();
     bool isStateEqual = state->isEqual(&StateID_Dizzy);
@@ -247,6 +212,12 @@ void daEnKuribon_c::loadModel() {
     return;
 }
 
+void daEnKuribon_c::initialize() {
+    aPhysics.info.bitfield2 = 0xFFBEFFFE;
+    flipTimer = 0;
+    return daEnKuribo_c::initialize();
+}
+
 void daEnKuribon_c::updateModel() {
     model._vf1C();
     return;
@@ -340,7 +311,6 @@ void daEnKuribon_c::beginState_Dizzy() {
         anmChr.setUpdateRate(1.0f);
     }
 
-    flipTimer = 0;
     rot.x = 0x8000;
     rot.y = dizzyAngles[direction];
     speed.x = 0.0;
@@ -480,7 +450,6 @@ void daEnKuribon_c::endState_Throw() {
 
 void daEnKuribon_c::beginState_Kick() {
     anmChr.setUpdateRate(2.0);
-    flipTimer = 0;
     float kickSpeeds[2] = {2.5, -2.5};
     speed.x = kickSpeeds[direction];
     speed.y = 2.0;

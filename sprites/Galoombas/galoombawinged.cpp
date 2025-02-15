@@ -14,8 +14,6 @@ class daEnPataKuribon_c : public daEnPataKuribo_c {
 
         dStageActor_c *spinLiftUpPlayer;
 
-        int onCreate();
-
         int _vf74();
         void itemPickedUp();
 
@@ -33,6 +31,8 @@ class daEnPataKuribon_c : public daEnPataKuribo_c {
         void reactFumiProc(dStageActor_c* killingActor);
         void loadModel();
         void loadWingModel();
+
+        void initialize();
 
         void updateModel();
         void playWalkAnim();
@@ -72,41 +72,6 @@ const char* PataGaloombaArcList[] = {
 
 const SpriteData PataGaloombaSpriteData = {ProfileId::EN_PATA_KURIBON, 8, 0xFFFFFFF0, 0, 8, 8, 8, 0, 0, 0, 0, 0};
 Profile PataGaloombaProfile(&daEnPataKuribon_c::build, SpriteId::EN_PATA_KURIBON, &PataGaloombaSpriteData, ProfileId::EN_PATA_KURIBO, ProfileId::EN_PATA_KURIBON, "EN_PATA_KURIBON", PataGaloombaArcList, 0x12);
-
-int daEnPataKuribon_c::onCreate() {
-    createModel();
-
-    ActivePhysics::Info kuribon_cc;
-
-    kuribon_cc.xDistToCenter = 0.0;
-	kuribon_cc.yDistToCenter = 8.0;
-	kuribon_cc.xDistToEdge = 8.0;
-	kuribon_cc.yDistToEdge = 8.0;
-	kuribon_cc.category1 = 0x3;
-	kuribon_cc.category2 = 0x0;
-	kuribon_cc.bitfield1 = 0x6F;
-	kuribon_cc.bitfield2 = 0xFFBEFFFE;
-	kuribon_cc.unkShort1C = 0;
-	kuribon_cc.callback = &dEn_c::collisionCallback;
-
-    aPhysics.initWithStruct(this, &kuribon_cc);
-    aPhysics.addToList();
-    
-    max_speed.y = -4.0;
-
-    s16 angles[2] = {0x2000, 0xE000};
-    direction = dSprite_c__getXDirectionOfFurthestPlayerRelativeToVEC3(this, pos);
-	rot.y = angles[direction];
-
-    appearsOnBackFence = settings >> 16 & 1;
-    zOffset = 0.0;
-    chkZoneBoundParam = 0;
-    _518 = 0;
-
-    initialize();
-    
-    return true;
-}
 
 int daEnPataKuribon_c::_vf74() {
     dStateBase_c *state = acState.getCurrentState();
@@ -324,6 +289,12 @@ void daEnPataKuribon_c::loadWingModel() {
     return;
 }
 
+void daEnPataKuribon_c::initialize() {
+    aPhysics.info.bitfield2 = 0xFFBEFFFE;
+    flipTimer = 0;
+    return daEnPataKuribo_c::initialize();
+}
+
 void daEnPataKuribon_c::updateModel() {
     model._vf1C();
     return;
@@ -416,7 +387,6 @@ void daEnPataKuribon_c::beginState_Dizzy() {
         model.bindAnim(&anmChr, 0.0);
         anmChr.setUpdateRate(1.0f);
     }
-    flipTimer = 0;
     rot.x = 0x8000;
     rot.y = dizzyAnglesPata[direction];
     speed.x = 0.0;
@@ -557,7 +527,6 @@ void daEnPataKuribon_c::endState_Throw() {
 
 void daEnPataKuribon_c::beginState_Kick() {
     anmChr.setUpdateRate(2.0);
-    flipTimer = 0;
     float kickSpeeds[2] = {2.5, -2.5};
     speed.x = kickSpeeds[direction];
     speed.y = 2.0;

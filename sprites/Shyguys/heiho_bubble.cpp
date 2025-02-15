@@ -303,6 +303,8 @@ void daEnHeihoBubble_c::initialize() {
     distance = settings >> 12 & 0xF;
     spawnDir = (settings >> 8 & 1)^1;
 
+    anmTexPat.setFrameForEntry(color, 0);
+
     scale.x = 1.0;
     scale.y = 1.0;
     scale.z = 1.0;

@@ -16,8 +16,6 @@ class daEnKuribon_c : public daEnKuribo_c {
 
         dStageActor_c *spinLiftUpPlayer;
 
-        int onCreate();
-
         int _vf74();
         void itemPickedUp();
 
@@ -34,6 +32,8 @@ class daEnKuribon_c : public daEnKuribo_c {
         void calcModel();
         void reactFumiProc(dStageActor_c* killingActor);
         void loadModel();
+
+        void initialize();
 
         void updateModel();
         void playWalkAnim();

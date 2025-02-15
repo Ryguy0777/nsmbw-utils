@@ -86,7 +86,6 @@ void daEnHeiho_c::loadModel() {
     resPat = resFile.GetResAnmTexPat("color");
 	anmTexPat.setup(bmdl, resPat, &allocator, 0, 1);
 	anmTexPat.bindEntry(&model, &resPat, 0, 1);
-	anmTexPat.setFrameForEntry(color, 0);
 	anmTexPat.setUpdateRateForEntry(0.0f, 0);
 	model.bindAnim(&anmTexPat);
 
@@ -99,6 +98,8 @@ void daEnHeiho_c::initialize() {
     health = settings >> 17 & 1;
     distance = settings >> 12 & 0xF;
     spawnDir = (settings >> 8 & 1)^1;
+
+    anmTexPat.setFrameForEntry(color, 0);
     
     scale.x = 1.0;
     scale.y = 1.0;

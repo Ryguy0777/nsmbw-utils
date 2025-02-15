@@ -34,6 +34,7 @@ class daEnHeihoNet_c : public daNetEnemy_c {
         void _vf5C();
 
         void playerCollision(ActivePhysics *apThis, ActivePhysics *apOther);
+        void yoshiCollision(ActivePhysics *apThis, ActivePhysics *apOther);
 
         void dieFall_Begin();
         void dieFall_Execute();
@@ -204,19 +205,30 @@ void daEnHeihoNet_c::calcMdl() {
 extern "C" char usedForDeterminingStatePress_or_playerCollision(dEn_c* t, ActivePhysics *apThis, ActivePhysics *apOther, int unk1);
 void daEnHeihoNet_c::playerCollision(ActivePhysics *apThis, ActivePhysics *apOther) {
     dStageActor_c *playerPtr = apOther->owner;
-    if (apThis == &aPhysics) {
+    char hitType = usedForDeterminingStatePress_or_playerCollision(this, apThis, apOther, 0);
+    if (hitType == 0) {
+        return dEn_c::playerCollision(apThis, apOther);
+    } else if (hitType == 1) {
+        Vec2 killSpeed;
+        killSpeed.x = 0.0;
+        killSpeed.y = 0.0;
+        killWithSpecifiedState(playerPtr, &killSpeed, &StateID_DieFall, 1);
+    } else if (hitType == 3) {
+        return killByDieFall(playerPtr);
+    }
+}
+
+void daEnHeihoNet_c::yoshiCollision(ActivePhysics *apThis, ActivePhysics *apOther) {
+        dStageActor_c *yoshiPtr = apOther->owner;
         char hitType = usedForDeterminingStatePress_or_playerCollision(this, apThis, apOther, 0);
         if (hitType == 0) {
-            return dEn_c::playerCollision(apThis, apOther);
+            return dEn_c::yoshiCollision(apThis, apOther);
         } else if (hitType == 1) {
             Vec2 killSpeed;
             killSpeed.x = 0.0;
             killSpeed.y = 0.0;
-            killWithSpecifiedState(playerPtr, &killSpeed, &StateID_DieFall, 1);
-        } else if (hitType == 3) {
-            return killByDieFall(playerPtr);
+            killWithSpecifiedState(yoshiPtr, &killSpeed, &StateID_DieYoshiFumi, 1);
         }
-    }
 }
 
 void daEnHeihoNet_c::dieFall_Begin() {
