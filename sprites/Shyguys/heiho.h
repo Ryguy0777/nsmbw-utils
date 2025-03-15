@@ -31,8 +31,6 @@ class daEnHeiho_c : public daEnKuriboBase_c {
         mEf::es2 effect;
         
         dStateBase_c *stateForRecover;
-
-        int onCreate();
  
         void dieFall_Begin();
         void dieFall_Execute();

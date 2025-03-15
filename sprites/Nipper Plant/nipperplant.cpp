@@ -437,6 +437,10 @@ void daEnPuchiPakkun_c::executeState_Walk() {
             velocity2.x = velocity2.x + _310;
         }
     } else {
+        if (checkForLedge(4.0f) == false) {
+            doStateChange(&StateID_Turn);
+            return;
+        }
         if (collMgr.outputMaybe & 0x15 << direction & 0x3f) {
             speed.x = 0.0;
             if (BgCheck & 1) {
@@ -601,7 +605,7 @@ void daEnPuchiPakkun_c::executeState_FireSpit() {
     dEn_c_EnBgCheck(this);
 
     if (fireTimer == 15 && isPlayerInFireRange()) {
-        create(AC_PAKKUN_PUCHI_FIRE, fireDist << 4 | fireDirection, &(Vec){pos.x, pos.y + 10.0, pos.z}, &rot, currentLayerID);
+        create(ProfileId::AC_PAKKUN_PUCHI_FIRE, fireDist << 4 | fireDirection, &(Vec){pos.x, pos.y + 10.0, pos.z}, &rot, currentLayerID);
         Vec2 soundPos;
         cvtSndObjctPos(&soundPos, &pos);
         startEnemySound(SoundClassRelated, SE_EMY_FIRE_BROS_FIRE, &soundPos, 0);
