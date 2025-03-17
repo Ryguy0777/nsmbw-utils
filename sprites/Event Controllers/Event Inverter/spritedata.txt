@@ -1,0 +1,9 @@
+  <sprite id="XXX" name="Event Controller - Inverter" notes="This sprite will invert the value of the target event when the triggering event is activated.">
+	<value nybble="1-2" title="Triggering Event ID" idtype="Triggering Event"/>
+    <value nybble="3-4" title="Target Event ID" idtype="Target Event"/>
+	<list nybble="12.3-12.4" title="Toggle type">
+		<entry value="0">When event state changes</entry>
+		<entry value="1">When event is enabled</entry>
+		<entry value="2">When event is disabled</entry>
+	</list>
+  </sprite> <!-- #XXX: Event Controller - Inverter-->

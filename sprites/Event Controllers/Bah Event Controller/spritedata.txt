@@ -1,4 +1,4 @@
-  <sprite id="XXX" name="Bah Event Controller" notes="This sprite will activate/deactivate an event for every bah in the level music.">
+  <sprite id="XXX" name="Event Controller - Bah Activation" notes="This sprite will activate/deactivate an event for every bah in the level music.">
     <value nybble="3-4" title="Target Event ID" idtype="Target Event"/>
 	<list nybble="12" title="Bah Type" comment="This is a bitfield, so the number of bahs is not the decimal value." comment2="Value 4 is checked by Koopas, figure out what bah type it correlates to.">
       <entry value="0">No Bahs</entry>
@@ -7,4 +7,4 @@
       <entry value="4">Unknown Value 4</entry>
       <entry value="8">Every Other Bah</entry>
     </list>
-  </sprite> <!-- #XXX: Bah Event Controller--> 
+  </sprite> <!-- #XXX: Event Controller - Bah Activation--> 
