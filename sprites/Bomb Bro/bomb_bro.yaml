@@ -1,0 +1,3 @@
+---
+source_files: [../src/bomb_bro.cpp, ../src/bomb_projectile.cpp]
+hooks: []

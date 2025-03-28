@@ -1,0 +1,3 @@
+---
+source_files: [../src/galoomba.cpp, ../src/galoombawinged.cpp, ../src/goombud.cpp]
+hooks: []
