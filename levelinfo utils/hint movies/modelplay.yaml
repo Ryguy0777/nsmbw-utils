@@ -1,0 +1,8 @@
+---
+source_files: [../src/modelplay.S, ../src/modelplay.cpp]
+hooks:
+  - name: ReadLevelNumberFromLevelInfo
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80794468
+    target_func: 'ReadLevelNumberFromLevelInfo'
