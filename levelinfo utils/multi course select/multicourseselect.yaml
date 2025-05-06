@@ -1,0 +1,40 @@
+---
+source_files: [../src/multicourseselect.S, ../src/multicourseselect.cpp]
+hooks:
+  - {name: AllowPage0ToHideButtons, type: nop_insn, area_pal: [0x8079DEEC, 0x8079DEF0]}
+
+  - name: ReadTitleFromLevelInfo
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80799B30
+    target_func: 'dMultiCourseSelect_c::setupTitle(int)'
+
+  - name: ReadDataFromLevelInfo
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8079E0C8
+    target_func: 'ReadDataFromLevelInfo'
+
+  - name: GetLevelID
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8079C410
+    target_func: 'dMultiCourseSelect_c::getLevelID(unsigned char *, unsigned char *, int)'
+
+  - name: SetButtonLevelID
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80799E80
+    target_func: 'dMultiCourseSelect_c::setButtonLevelID(int, int)'
+
+  - name: GetTextureName
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8079DE80
+    target_func: 'dMultiCourseSelectContents_c::getTextureName(int, int)'
+
+  - name: CheckIfPreviewExists
+    type: branch_insn
+    branch_type: bl
+    src_addr_pal: 0x8079E040
+    target_func: 'CheckIfPreviewExists'
