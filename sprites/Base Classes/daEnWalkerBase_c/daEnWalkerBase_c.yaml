@@ -1,0 +1,3 @@
+---
+source_files: [../src/daEnWalkerBase_c.cpp, ../src/daEnWalkerExample.cpp]
+hooks: []

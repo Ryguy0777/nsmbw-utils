@@ -155,8 +155,9 @@ int daEnHeihoNet_c::onCreate() {
     _36D = 2;
 
     //ice stuff
-    flags_4FC |= 2;
-    flags_4FC = 6;
+    //turns out these actually enable the hardhit sound and graphic!
+    //flags_4FC |= 2;
+    //flags_4FC = 6;
     frzMgr.setSomething(0, 3, 3);
 
     setMoveState();

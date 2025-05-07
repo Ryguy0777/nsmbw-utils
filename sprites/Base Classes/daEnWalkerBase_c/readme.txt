@@ -1,0 +1,2 @@
+This is a custom class that allows you to easily make walking enemy sprites, advanced or simple.
+Included is the class along with an example of how to make a sprite using it. Feel free to use this as much as you need!
