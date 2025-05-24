@@ -1,15 +1,5 @@
   <sprite id="XXX" name="Galoomba" notes="A sub-species of a Goomba that resists being stomped.">
     <checkbox nybble="8.4" title="Place Behind Other Sprites" comment="When enabled, this changes the relative Z-order of the Galoomba placing it further behind other sprites."/>
-	<list nybble="6" title="Spawn Direction" requirednybble="12" requiredval="4">
-	  <entry value="0">Left</entry>
-      <entry value="1">Right</entry>
-	</list>
-	<list nybble="6" title="Spawn Direction and Height" comment="The Galoomba will jump in the opposite direction they are facing." requirednybble="12" requiredval="5">
-	  <entry value="0">Left, Low</entry>
-      <entry value="1">Right, Low</entry>
-	  <entry value="2">Left, High</entry>
-      <entry value="3">Right, High</entry>
-	</list>
     <list nybble="12" title="Load-In Animation" comment="This value affects the spawning animation of the Galoomba. This is useful for Galoombas within range of a nearby Entrance. Jumps and Tumble will result in it landing on the platform below where it was initially placed.">
       <entry value="0">Normal</entry>
       <entry value="1">Tumble</entry>
@@ -26,16 +16,6 @@
   
   <sprite id="XXX" name="Goombud" notes="A sub-species of a Goomba that resists being stomped and will turn at ledges.">
     <checkbox nybble="8.4" title="Place Behind Other Sprites" comment="When enabled, this changes the relative Z-order of the Goombud placing it further behind other sprites."/>
-	<list nybble="6" title="Spawn Direction" requirednybble="12" requiredval="4">
-	  <entry value="0">Left</entry>
-      <entry value="1">Right</entry>
-	</list>
-	<list nybble="6" title="Spawn Direction and Height" comment="The Goombud will jump in the opposite direction they are facing." requirednybble="12" requiredval="5">
-	  <entry value="0">Left, Low</entry>
-      <entry value="1">Right, Low</entry>
-	  <entry value="2">Left, High</entry>
-      <entry value="3">Right, High</entry>
-	</list>
     <list nybble="12" title="Load-In Animation" comment="This value affects the spawning animation of the Goombud. This is useful for Goombuds within range of a nearby Entrance. Jumps and Tumble will result in it landing on the platform below where it was initially placed.">
       <entry value="0">Normal</entry>
       <entry value="1">Tumble</entry>

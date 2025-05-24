@@ -1,0 +1,24 @@
+  <sprite id="XXX" name="Goombrat" notes="A sub-species of a Goomba which stays on platforms.">
+    <checkbox nybble="8.4" title="Place Behind Other Sprites" comment="When enabled, this changes the relative Z-order of the Goombrat placing it further behind other sprites."/>
+    <list nybble="12" title="Load-In Animation" comment="This value affects the spawning animation of the Goombrat. This is useful for Goombrats within range of a nearby Entrance. Jumps and Tumble will result in it landing on the platform below where it was initially placed.">
+      <entry value="0">Normal</entry>
+      <entry value="1">Tumble</entry>
+      <entry value="2">Small Jump</entry>
+      <entry value="3">Hesitates</entry>
+      <entry value="4">Medium Jump</entry>
+      <entry value="5">Large Jump</entry>
+    </list>
+  </sprite> <!-- #XXX: Goombrat -->
+
+class SpriteImage_Goombrat(SLib.SpriteImage_Static):
+    def __init__(self, parent):
+        super().__init__(
+            parent,
+            1.5,
+            ImageCache['Goombrat'],
+            (-2, -5)
+        )
+
+    @staticmethod
+    def loadImages():
+        SLib.loadIfNotInImageCache('Goombrat', 'goombrat.png')

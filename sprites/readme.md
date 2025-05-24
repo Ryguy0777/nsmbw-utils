@@ -14,3 +14,5 @@ Instructions are provided for sprites that require more effort to install.
 	* Model - Ethonic
 - Nipper Plant
 	* Model - Ethonic
+- Goombrat
+	* Model - G4L

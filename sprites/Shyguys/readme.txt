@@ -1,1 +1,1 @@
-requires more sprites, and daEnKuribo_c
+requires daEnKuribo_c
