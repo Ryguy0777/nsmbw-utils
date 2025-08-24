@@ -5,6 +5,11 @@ Compatible with: NSMBWer+ (Newer 1.30 may be supported but not guaranteed to wor
 
 INSTALLATION:
     Each utility requires a set of headers and code, otherwise they all have separate install instructions.
+    Add the following symbols to kamek_pal.x
+        GetKinokoHouseKind = 0x800fb440;
+	    getStartKinokoKind = 0x800fb460;
+	    isHomeCourseClear = 0x800fcb30;
+        CurrentWorldNumForWorldMap = 0x8042A52D;
     Add levelnumber.h and utils.h to the include folder, in stage.h add "#include <levelnumber.h>" (no quotes)
     Add utils.cpp and utils.yaml to your project
 

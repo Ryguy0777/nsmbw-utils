@@ -82,7 +82,7 @@ void Pausewindow_c::newLoadLevelName() {
 	dLevelInfo_c::entry_s *level = dLevelInfo_c::s_info.searchBySlot(wnum, lnum);
 	if (level) {
 		convWorldName = getWorldNumber(level->displayWorld);
-		convLevelName = getLevelNumber((int)wnum, level->displayLevel);
+		convLevelName = getLevelNumber(level->displayLevel);
 
 		T_worldNum_00->SetString(convWorldName);
 

@@ -76,7 +76,7 @@ void SCMWorldAndLevelNumbers(nw4r::lyt::TextBox *T_worldNum_00, nw4r::lyt::TextB
     dLevelInfo_c::entry_s *level = dLevelInfo_c::s_info.searchBySlot(worldNumber, levelNumber);
     if (level) {
         const wchar_t *convWorldName = getWorldNumber(level->displayWorld);
-        const wchar_t *convLevelName = getLevelNumber(worldNumber, level->displayLevel);
+        const wchar_t *convLevelName = getLevelNumber(level->displayLevel);
 
         T_worldNum_00->SetString(convWorldName);
 

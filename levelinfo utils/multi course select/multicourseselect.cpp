@@ -64,7 +64,7 @@ void dMultiCourseSelectContents_c::loadInfo() {
 	if (level) {
 		const wchar_t *worldName, *levelName;
 		worldName = getWorldNumber(level->displayWorld);
-		levelName = getLevelNumber(level->displayWorld, level->displayLevel);
+		levelName = getLevelNumber(level->displayLevel);
 
 		T_W_corseNum_00->SetString(worldName);
 		if (level->displayLevel > 19) {

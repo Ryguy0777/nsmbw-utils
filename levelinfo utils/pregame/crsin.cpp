@@ -68,7 +68,7 @@ void PregameLytHandler::newLoadLevelNumber() {
     dLevelInfo_c::entry_s *Level = dLevelInfo_c::s_info.searchBySlot(world, level);
 	if (Level) {
 		convWorldName = getWorldNumber(Level->displayWorld);
-		convLevelName = getLevelNumber(world, Level->displayLevel);
+		convLevelName = getLevelNumber(Level->displayLevel);
 
 		T_worldNum_00->SetString(convWorldName);
 

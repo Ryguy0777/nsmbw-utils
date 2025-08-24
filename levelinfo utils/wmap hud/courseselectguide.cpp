@@ -56,7 +56,7 @@ void dCourseSelectGuide_c::NewUpdateLevelDisplay(u32 param) {
 			const wchar_t *convLevelName;
 
 			convWorldName = getWorldNumber(level->displayWorld);
-			convLevelName = getLevelNumber(currentWorldNum, level->displayLevel);
+			convLevelName = getLevelNumber(level->displayLevel);
 
 			T_worldNum_00->SetString(convWorldName);
 

@@ -70,27 +70,27 @@ static const wchar_t *worldNumbers[] = {
 	L"F",
 };
 
-const wchar_t* getLevelNumber(int world, int level) {
+const wchar_t* getLevelNumber(int level) {
 	if ((level >= 39) && (level <= 40)) {
-		SaveFile *file = GetSaveFile();
-		SaveBlock *block = file->GetBlock(file->header.current_file);
-		switch(block->toad_level_idx[world]) {
+		switch(getStartingHouseKind()) {
 			case 0: //arrow
 				return levelNumbers[level];
 				break;
-			case 4: //yellow
+			case 1: //yellow
+			case 4:
 				return levelNumbers[28];
 				break;
-			case 5: //red
-				return levelNumbers[27];
+			case 2: //red
+			case 5:
+				return levelNumbers[29];
 				break;
-			default: //green
+			case 3: //green
+			case 6:
 				return levelNumbers[26];
 				break;
 		}
-	} else {
-		return levelNumbers[level];
 	}
+	return levelNumbers[level];
 }
 
 const wchar_t* getWorldNumber(int world) {
@@ -130,4 +130,15 @@ LevelNumber newGetCourseNum(int worldNum, int levelNum) {
 		}
 	}
 	return Stage_Invalid;
+}
+
+extern "C" bool isHomeCourseClear(int world); // 800fcb30
+extern "C" u8 getStartKinokoKind(); // 800fb460
+extern u8 CurrentWorldNumForWorldMap;
+u32 getStartingHouseKind() {
+	if (!isHomeCourseClear(CurrentWorldNumForWorldMap)) {
+		return 0;
+	} else {
+		return getStartKinokoKind();
+	}
 }
