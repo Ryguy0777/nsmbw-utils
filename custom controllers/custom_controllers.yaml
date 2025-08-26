@@ -1,0 +1,394 @@
+---
+source_files:
+   - ../src/controls/lib/pad.cpp
+   - ../src/controls/lib/padClamp.cpp
+   - ../src/controls/lib/si.cpp
+
+   - ../src/controls/custom_controllers.cpp
+   - ../src/controls/custom_controllers.S
+   - ../src/controls/remocon_mng.cpp
+   - ../src/controls/warning_manager.cpp
+   - ../src/controls/controller_icons.cpp
+
+   - ../src/controls/classic_controller.cpp
+   - ../src/controls/gamecube_controller.cpp
+   - ../src/controls/guitar_hero.cpp
+
+hooks:
+  - name: NewNoneInit
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcc40
+    target_func: 'newInitializeNone(dRemoconMng_c::dConnect_c::dExtension_c *)'
+
+  - name: NewNoneExecute
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcc60
+    target_func: 'newExecuteNone(dRemoconMng_c::dConnect_c::dExtension_c *)'
+  
+  - name: NewFreestyleInit
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcd70
+    target_func: 'newInitializeFreestyle(dRemoconMng_c::dConnect_c::dExtension_c *)'
+
+  - name: NewFreestyleExecute
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcd90
+    target_func: 'newExecuteFreestyle(dRemoconMng_c::dConnect_c::dExtension_c *)'
+  
+  - name: NewOtherInit
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcea0
+    target_func: 'newInitializeOther(dRemoconMng_c::dConnect_c::dExtension_c *)'
+
+  - name: NewOtherExecute
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcec0
+    target_func: 'newExecuteOther(dRemoconMng_c::dConnect_c::dExtension_c *)'
+  
+  - name: NewWaitInit
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcaf0
+    target_func: 'newInitializeWait(dRemoconMng_c::dConnect_c::dExtension_c *)'
+  
+  - name: NewWaitExecute
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800dcb10
+    target_func: 'newExecuteWait(dRemoconMng_c::dConnect_c::dExtension_c *)'
+
+  - name: recognizeGuitar
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x801ddbb0
+    target_func: 'isGuitarEnabled(void)'
+  
+  - name: assignGameKeyID
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800b5df8
+    target_func: 'assignGameKeyID'
+
+  - name: ChangeWarningMgrSize
+    type: patch
+    addr_pal: 0x8010D278
+    data: '38600F6C' # Orig: 38600B94
+
+  - name: CtorClassic
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010D2F8
+    target_func: 'CtorClassic'
+
+  - name: DtorClassic
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010D568
+    target_func: 'DtorClassic'
+
+  - name: WarningMgrNewCreate
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010d5b0
+    target_func: 'dWarningManager_c::newCreate(void)'
+
+  - name: WarningMgrNewDelete
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010d7e0
+    target_func: 'dWarningManager_c::newDelete(void)'
+
+  - name: WarningMgrNewDraw
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010d780
+    target_func: 'dWarningManager_c::newDraw(void)'
+
+  - name: WarningMgrNewShowWarnings
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010df40
+    target_func: 'dWarningManager_c::newExecuteWarningCheck(void)'
+
+  - name: WarningMgrNewWarningEnd
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010e5a0
+    target_func: 'dWarningManager_c::newAllWarningEnd(bool)'
+
+  - name: WarningMgrNewExecuteExitAnimeEndWait
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010e2d0
+    target_func: 'dWarningManager_c::newExecuteExitAnimeEndWait(void)'
+  
+  - name: WarningMgrNewWarningOtherDispSetup
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8010db30
+    target_func: 'dWarningManager_c::newOtherDispSetup(unsigned int)'
+
+  - name: mapRumble1
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x802bcbf0
+    target_func: 'startMotor(EGG::CoreController *)'
+  
+  - name: mapRumble2
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x802bcc00
+    target_func: 'stopMotor(EGG::CoreController *)'
+  
+  - name: noRemoSpeaker
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80069530
+    target_func: 'getRemotePlayer(unsigned int)'
+  
+  - name: fixBatteryLevels
+    type: branch_insn
+    branch_type: bl
+    src_addr_pal: 0x800dc930
+    target_func: 'accountForGCBattery(int)'
+  
+  - name: fixBatteryLevels2
+    type: branch_insn
+    branch_type: bl
+    src_addr_pal: 0x800dca40
+    target_func: 'accountForGCBattery(int)'
+  
+  - name: readPads
+    type: add_func_pointer
+    src_addr_pal: 0x80350320
+    target_func: 'EGG::CoreControllerMgr::readPad( (void))'
+  
+  - name: resetPads
+    type: add_func_pointer
+    src_addr_pal: 0x80350324
+    target_func: 'EGG::CoreControllerMgr::resetPad( (void))'
+
+  - name: mapButtons1
+    type: add_func_pointer
+    src_addr_pal: 0x80350310
+    target_func: 'EGG::CoreController::mapButtons( (void))'
+  
+  - name: mapButtons2
+    type: add_func_pointer
+    src_addr_pal: 0x803503a0
+    target_func: 'EGG::CoreController::mapButtons( (void))'
+  
+  - name: handleNiceBoatTilt
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80871184
+    target_func: 'handleTiltingNiceBoat'
+  
+  - name: handleRemoCannonTilt
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80a964e0
+    target_func: 'handleRemoCannonTilt(void *, short)'
+  
+  - name: fixRemoWireTilt
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x808c4860
+    target_func: 'fixRemoWireDirection(void *)'
+  
+  - name: handleRemoSeesawTilt1
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8083f550
+    target_func: 'handleRemoSeesawTiltStart(void *)'
+  
+  - name: handleRemoSeesawTilt2
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8083f4f0
+    target_func: 'handleRemoSeesawTilt(void *)'
+  
+  - name: useSidewaysInputForExtensions
+    type: patch
+    addr_pal: 0x800b60dc
+    data: '2c000001'
+  
+  - name: useSideWaysTilt
+    type: patch
+    addr_pal: 0x800b6228
+    data: '2c000001 41820024'
+  
+  - name: useSidewaysInputWorldmap
+    type: branch_insn
+    branch_type: b 
+    src_addr_pal: 0x800fd4a0
+    target_func: 'dWmLib_isYokoCon(int)'
+
+  - name: HBMOpen
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800695a0
+    target_func: 'HBMOpen(void)'
+
+  - name: HBMClose
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800695b0
+    target_func: 'HBMClose(void)'
+  
+  - name: fixPlayerOne1
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8005e590
+    target_func: 'dAcPyKey_c::newTriggerOne(void)'
+  
+  - name: fixPlayerOne2
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8005e5d0
+    target_func: 'dAcPyKey_c::newButtonOne(void)'
+  
+  - name: fixPlayerOne3
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8005e610
+    target_func: 'dAcPyKey_c::newButtonDush(void)'
+  
+  - name: fixPlayerSpinSfx
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x8013d320
+    target_func: 'setPropelFallSpinEffect(dAcPy_c *)'
+  
+  - name: fix2DPlayerJump
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x808c5e14
+    target_func: 'fix2DPlayerJump'
+  
+  - name: fix2DPlayerJump2
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x808c6658
+    target_func: 'fix2DPlayerJump2'
+  
+  - name: newCheckCancel
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800b53f0
+    target_func: 'newCheckCancel(int)'
+  
+  - name: enableHBMClassic
+    type: nop_insn
+    area_pal: [0x80109c78, 0x80109c84]
+  
+  - name: useClassicStickHBM
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x80109cb4
+    target_func: 'useClassicInHBM'
+
+# update BMG sequences
+  - name: addNewButtonsToBMG1
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800e6f90
+    target_func: 'addNewButtonsToBMG1(void *, dScript::Res_c *, char *)'
+
+  - name: addNewButtonsToBMG2
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800e6cc0
+    target_func: 'addNewButtonsToBMG2(void *, dScript::Res_c *, char *, unsigned long)'
+  
+  - name: addNewButtonsToBMG3
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800e6e50
+    target_func: 'addNewButtonsToBMG3(void *, dScript::Res_c *, char *, unsigned long)'
+
+  - name: addNewButtonsToBMG4
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800e6d40
+    target_func: 'addNewButtonsToBMG4(void *, dScript::Res_c *)'
+
+# update button prompts
+  - name: CSG_buttonPromptUpdate
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800126A0
+    target_func: 'CourseSelectGuide_updateButtons(CourseSelectGuide *)'
+
+  - name: SI_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x8094FD00
+    target_func: 'StockItem_updateButtons(dStockItem_c *)'
+
+  - name: CSM_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x809415F8
+    target_func: 'CourseSelectMenu_updateButtons(void *)'
+
+  - name: CC_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x8093FA90
+    target_func: 'CollectionCoin_updateButtons(void *)'
+
+  - name: WSG_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x8098EB10
+    target_func: 'WorldSelectGuide_updateButtons(WorldSelectGuide *)'
+
+  - name: FS_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x80943DF0
+    target_func: 'FileSelect_updateButtons(void *)'
+
+  - name: EOT_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x809432E0
+    target_func: 'EventOpeningTitle_updateButtons(void *)'
+
+  - name: SP_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x8094E838
+    target_func: 'SelectPlayer_updateButtons(void *)'
+
+  - name: NPC_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x8094B670
+    target_func: 'NumberOfPeopleChange_updateButtons(void *)'
+
+  - name: CCI_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x8093E418
+    target_func: 'CharacterChangeIndicator_updateButtons(CharacterChangeIndicator *)'
+
+  - name: MCS_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x80949BF0
+    target_func: 'MultiCourseSelect_updateButtons(void *)'
+
+  - name: MGW_buttonPromptUpdate
+    type: add_func_pointer
+    src_addr_pal: 0x80946F50
+    target_func: 'MiniGameWire_updateButtons(void *)'
+
+  - name: FI_buttonPromptUpdate
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800B19C0
+    target_func: 'dfukidashiInfo_c::ControllerConnectCheck(void)'
+
+  - name: noFukidashiIfCustomController
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800b1990
+    target_func: 'dfukidashiInfo_c::draw(void)'
