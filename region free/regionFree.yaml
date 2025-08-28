@@ -1,0 +1,14 @@
+---
+source_files: [../src/regionFree.S]
+hooks: 
+  - name: regionFreeSaves
+    type: branch_insn
+    branch_type: b
+    src_addr_pal: 0x800cf8a4
+    target_func: 'regionFreeSaveFile'
+  
+  - name: regionFreeTitle
+    type: branch_insn
+    branch_type: bl
+    src_addr_pal: 0x80781c78
+    target_func: 'regionFreeTitleScreen'
